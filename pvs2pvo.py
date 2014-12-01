@@ -54,6 +54,7 @@ pvo_outputuri= "/service/r2/addoutput.jsp"
 pvo_key = "7ed8a297d387d3887dbd8059c5d8544382a4a12b" 
 pvo_systemid = "24657"                                  # Your PVoutput system ID here
 pvo_statusInterval = 5                                  # How often in minutes to update PVoutput 
+sampleTime = 10/3600					# Time in hours of updates from Kaco unit (normally 10 seconds)
 
 localOnlyTesting = False # True for local only, False turns on pvoutput upload
 
@@ -66,6 +67,7 @@ lastStatus = time.localtime()
 
 dailyUse = 0.0
 dailyGen = 0.0
+dailyEnergy = 0.0
 minTemp = 100
 maxTemp = -100
 dailyReadings = 0
@@ -186,15 +188,16 @@ def addReading(power):
     temperature = power.temperature()
     amps = power.generatedCurrent()
     timeNow = time.localtime()
-    print(power.timeOfReading().strftime('%Y-%m-%d %H:%M:%S'), "Gen:", gen, "W ", volts,"V ", amps,"A")
     global totalGen, totalReadings, lastStatus, totalAmps, totalVolts
     totalGen += gen
     totalAmps += amps
     totalVolts += volts
     totalReadings += 1
-    global dailyGen, dailyReadings, lastOutput, peakGen, peakTime, fullDaysReadings, maxTemp, minTemp
+    global sampleTime, dailyEnergy, dailyGen, dailyReadings, lastOutput, peakGen, peakTime, fullDaysReadings, maxTemp, minTemp
     dailyGen += gen
+    dailyEnergy += (gen*sampleTime)
     dailyReadings += 1
+    print(power.timeOfReading().strftime('%Y-%m-%d %H:%M:%S'), "Gen:", gen, "W ", dailyEnergy, "Wh ", volts,"V ", amps,"A")
     if (gen > peakGen):
         peakGen = int(gen)
         peakTime = timeNow
@@ -209,7 +212,7 @@ def addReading(power):
         avgVoltage = float(totalVolts / totalReadings)
         avgCurrent = float(totalAmps / totalReadings)
         print("Time to output status. avgGen:", avgGen, "W ", avgVoltage, "V ", avgCurrent,"A")
-        if postPVstatus(timeNow, 0, avgGen, 0, 0,  temperature, avgVoltage):
+        if postPVstatus(timeNow, dailyEnergy, avgGen, 0, 0,  temperature, avgVoltage):
             lastStatus = timeNow
             totalUse = 0.0
             totalGen = 0.0
@@ -236,6 +239,7 @@ def addReading(power):
                 peakTime = timeNow
                 minTemp = 100
                 maxTemp = -100
+                dailyEnergy = 0.0
                 print("EOD Output sucessfully sent to PVoutput")
             else:
                 print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),"Failed to post daily output to pvoutput")
