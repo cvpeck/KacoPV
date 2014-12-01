@@ -1,0 +1,6 @@
+#!/bin/bash
+
+TODAY=$(date +"%Y%m%d")
+LOGFILE="/home/pi/pvs2pvo/logs/$TODAY.log"
+/home/pi/pvs2pvo/pvs2pvo.py >>$LOGFILE &
+
