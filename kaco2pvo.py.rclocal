@@ -1,0 +1,56 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          kaco2pvo.py 
+# Required-Start:
+# Required-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 
+# X-Interactive:     false
+# Short-Description: Start/stop kaco2pvo.py kaco to pvoutput monitoring script 
+### END INIT INFO
+
+
+TODAY=$(date +"%Y%m%d")
+LOGFILE="/var/log/solar/$TODAY.log"
+USER="solar"
+HOMEDIR="/home/solar"
+SCRIPTDIR=$HOMEDIR/solar
+SCRIPTNAME="kaco2pvo.py"
+PYTHON="/usr/bin/python3.2"
+
+
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin:$SCRIPTDIR
+. /lib/init/vars.sh
+
+do_start () {
+	 start-stop-daemon --user $USER --name $SCRIPTNAME --start --startas $PYTHON $SCRIPTDIR/$SCRIPTNAME >>$LOGFILE &
+}
+
+do_status () {
+	start-stop-daemon --user $USER --name $SCRIPTNAME --status $SCRIPTDIR/$SCRIPTNAME
+}
+
+do_stop () {
+        start-stop-daemon --user $USER --name $SCRIPTNAME --stop $SCRIPTDIR/$SCRIPTNAME
+}
+
+case "$1" in
+  start|"")
+	do_start
+	;;
+  restart|reload|force-reload)
+	echo "Error: argument '$1' not supported" >&2
+	exit 3
+	;;
+  stop)
+	do_stop
+	;;
+  status)
+	do_status
+	;;
+  *)
+	echo "Usage: kaco2pvo.py [start|stop|status]" >&2
+	exit 3
+	;;
+esac
