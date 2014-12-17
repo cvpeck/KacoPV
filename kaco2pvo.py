@@ -56,6 +56,9 @@ pvo_systemid = "24657"                                  # Your PVoutput system I
 pvo_statusInterval = 5                                  # How often in minutes to update PVoutput 
 sampleTime = 10/3600					# Time in hours of updates from Kaco unit (normally 10 seconds)
 
+pvDailyUploadTimeHour = 9
+pvDailyUploadTimeMin = 45
+
 localOnlyTesting = False # True for local only, False turns on pvoutput upload
 
 totalUse = 0.0
@@ -72,9 +75,10 @@ minTemp = 100
 maxTemp = -100
 dailyReadings = 0
 lastOutput = time.localtime()
+lastOutput = time.gmtime(0) # set last daily summary output to epoch ie never
 peakGen  = 0.0
 peakTime = time.localtime()
-sunriseHour = 8
+sunriseHour = 9 # latest time after which it is decided that there aren't a full days readings
 fullDaysReadings = False
 
 def num(s):
@@ -150,7 +154,7 @@ def post( uri, params ):
 def postPVstatus(timeOfReading, energyGen, powerGen, energyUse, powerUse, temp, volts):
         params = {'d' : time.strftime('%Y%m%d',timeOfReading),
            't' : time.strftime('%H:%M', timeOfReading),
-           'v1' : energyGen,  # for later use if required
+           'v1' : energyGen,
            'v2' : powerGen,
            'v3' : energyUse,  # for later use if required
            'v4' : powerUse,
@@ -163,13 +167,14 @@ def postPVstatus(timeOfReading, energyGen, powerGen, energyUse, powerUse, temp, 
         # POST the data
         return post(pvo_statusuri, params)
 
-def postPVoutput(dateOfOutput, generated, exported, peakPower, peakTime, condition, minTemp, maxTemp, importPeak, importOffPeak, importShoulder, importHighShoulder, consumption):
+def postPVoutput(dateOfOutput, generated, exported, peakPower, peakTime, condition, minTemp, maxTemp, importPeak, importOffPeak, importShoulder, importHighShoulder, consumption, comment):
         params = {'d' : time.strftime('%Y%m%d',dateOfOutput),
             'g'  : generated,
             'e'  : exported,
             'pp' : peakPower,
             'pt' : time.strftime('%H:%M', peakTime ),
-            'cd' : condition,
+            # 'cd' : condition,
+            # pvoutput automatically obtains weather data to find conditions
             'tm' : minTemp,
             'tx' : maxTemp,
 	    'ip' : importPeak,
@@ -177,7 +182,7 @@ def postPVoutput(dateOfOutput, generated, exported, peakPower, peakTime, conditi
             'is' : importShoulder,
 	    'ih' : importHighShoulder,
             'c'  : consumption,
-            'cm': 'EOD upload. Readings since ' + time.strftime('%d/%m/%Y %H:%M:%S', startTime)}
+            'cm': 'EOD upload. Readings since ' + time.strftime('%d/%m/%Y %H:%M:%S', startTime) + comment}
         print("Params:", params)
         # POST the data
         return post(pvo_outputuri, params)
@@ -188,6 +193,7 @@ def addReading(power):
     temperature = power.temperature()
     amps = power.generatedCurrent()
     timeNow = time.localtime()
+    comment = ""
     global totalGen, totalReadings, lastStatus, totalAmps, totalVolts
     totalGen += gen
     totalAmps += amps
@@ -224,25 +230,30 @@ def addReading(power):
             lastStatus = timeNow
             print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),"Failed to post status to pvoutput")
         sys.stdout.flush()
-    if (timeNow.tm_hour == 0) & (lastOutput.tm_mday != timeNow.tm_mday):
+    print ("Debugging daily sumary")
+    print ("timeNow.tm_hour = ",timeNow.tm_hour)
+    print ("timeNow.tm_min = ",timeNow.tm_min)
+    print ("timeNow.tm_day = ",timeNow.tm_mday)
+    print ("lastOutput.tm_mday = ",lastOutput.tm_mday)
+    if (timeNow.tm_hour >= pvDailyUploadTimeHour) and (timeNow.tm_min >= pvDailyUploadTimeMin) and (lastOutput.tm_mday != timeNow.tm_mday):
         daysGen = int((dailyGen / dailyReadings) * 24.0)
         print("Time to output EOD. DaysGen:", daysGen, "W")
         if not fullDaysReadings:
-            print("Incomplete days readings. Skipping daily summary")
+            print(" Incomplete days readings.")
+            comment = " Incomplete readings for days"
+        if postPVoutput(lastOutput, daysGen, 0, peakGen, peakTime, 'Not Sure', minTemp, maxTemp, 0, 0, 0, 0, 0, comment):
+            lastOutput = timeNow
+            dailyUse = 0
+            dailyGen = 0
+            dailyReadings = 0
+            peakGen  = 0
+            peakTime = timeNow
+            minTemp = 100
+            maxTemp = -100
+            dailyEnergy = 0.0
+            print("EOD Output sucessfully sent to PVoutput")
         else:
-            if postPVoutput(lastOutput, daysGen, 0, peakGen, peakTime, 'Not Sure', minTemp, maxTemp, 0, 0, 0, 0):
-                lastOutput = timeNow
-                dailyUse = 0
-                dailyGen = 0
-                dailyReadings = 0
-                peakGen  = 0
-                peakTime = timeNow
-                minTemp = 100
-                maxTemp = -100
-                dailyEnergy = 0.0
-                print("EOD Output sucessfully sent to PVoutput")
-            else:
-                print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),"Failed to post daily output to pvoutput")
+            print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),"Failed to post daily output to pvoutput")
         fullDaysReadings = True
     sys.stdout.flush()
 
