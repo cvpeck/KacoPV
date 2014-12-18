@@ -56,7 +56,7 @@ pvo_systemid = "24657"                                  # Your PVoutput system I
 pvo_statusInterval = 5                                  # How often in minutes to update PVoutput 
 sampleTime = 10/3600					# Time in hours of updates from Kaco unit (normally 10 seconds)
 
-pvDailyUploadTimeHour = 9
+pvDailyUploadTimeHour = 23 
 pvDailyUploadTimeMin = 45
 
 localOnlyTesting = False # True for local only, False turns on pvoutput upload
@@ -230,18 +230,18 @@ def addReading(power):
             lastStatus = timeNow
             print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),"Failed to post status to pvoutput")
         sys.stdout.flush()
-    print ("Debugging daily sumary")
-    print ("timeNow.tm_hour = ",timeNow.tm_hour)
-    print ("timeNow.tm_min = ",timeNow.tm_min)
-    print ("timeNow.tm_day = ",timeNow.tm_mday)
-    print ("lastOutput.tm_mday = ",lastOutput.tm_mday)
+    #print ("Debugging daily sumary")
+    #print ("timeNow.tm_hour = ",timeNow.tm_hour)
+    #print ("timeNow.tm_min = ",timeNow.tm_min)
+    #print ("timeNow.tm_day = ",timeNow.tm_mday)
+    #print ("lastOutput.tm_mday = ",lastOutput.tm_mday)
     if (timeNow.tm_hour >= pvDailyUploadTimeHour) and (timeNow.tm_min >= pvDailyUploadTimeMin) and (lastOutput.tm_mday != timeNow.tm_mday):
         daysGen = int((dailyGen / dailyReadings) * 24.0)
         print("Time to output EOD. DaysGen:", daysGen, "W")
         if not fullDaysReadings:
             print(" Incomplete days readings.")
             comment = " Incomplete readings for days"
-        if postPVoutput(lastOutput, daysGen, 0, peakGen, peakTime, 'Not Sure', minTemp, maxTemp, 0, 0, 0, 0, 0, comment):
+        if postPVoutput(timeNow, daysGen, 0, peakGen, peakTime, 'Not Sure', minTemp, maxTemp, 0, 0, 0, 0, 0, comment):
             lastOutput = timeNow
             dailyUse = 0
             dailyGen = 0
