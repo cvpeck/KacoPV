@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:kaco2pvo.py">
+   </FileRef>
+   <FileRef
+      location = "group:kaco2pvo.py.rclocal">
+   </FileRef>
+</Workspace>
