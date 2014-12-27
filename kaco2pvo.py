@@ -4,20 +4,20 @@
 # Upload from Kaco Powador serial output to pvoutput.org live feed
 #
 #
-# To be run on RaspberryPi Python3 (IDLE3) using Prolific based USB/Serial cable
+# To be run on RaspberryPi Python3 (IDLE3) using Prolific USB/Serial cable
 # To download required serial library from terminal prompt:
 #
 # sudo apt-get install python3-serial
 #
 # Supplied with limited tested for others to tailor to their own needs
 #
-# This software in any form is covered by the following Open Source BSD license:
+# This software in any form is covered by the following Open Source BSD license
 #
 # Copyright 2013-2014, Ian Hutt
 # All rights reserved.
 #
-# Redistribution and use in source and binary forms, with or without modification,
-# are permitted provided that the following conditions are met:
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
 #
 # 1. Redistributions of source code must retain the above copyright notice,
 # this list of conditions and the following disclaimer.
@@ -31,18 +31,20 @@
 # THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
 # PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER
 # OR CONTRIBUTORS BE LIABLE FOR
-# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES
 # (INCLUDING, BUT NOT LIMITE
-# TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
-# OR BUSINESS INTERRUPTION)
-# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-# OR TORT (INCLUDING
+# TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+# OR PROFITS; OR BUSINESS INTERRUPTION)
+# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+# STRICT LIABILITY, OR TORT (INCLUDING
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
 from datetime import datetime
-import time, serial, sys
+import time
+import serial
+import sys
 
 # Import requirements for logging
 import logging
@@ -66,27 +68,27 @@ CONSOLE.setFormatter(FORMATTER)
 logging.getLogger('').addHandler(CONSOLE)
 
 # Now, we can log to the root logger, or any other logger. First the root...
-#logging.info('Jackdaws love my big sphinx of quartz.')
+# logging.info('Jackdaws love my big sphinx of quartz.')
 
 # Now, define a couple of other loggers which might represent areas in your
 # application:
 
-#general logging
+# general logging
 LOGGER1 = logging.getLogger('kaco2pv.general')
-#logging info for daily output
+# logging info for daily output
 LOGGER2 = logging.getLogger('kaco2pv.dailyreadings')
-#logging info for regular output
+# logging info for regular output
 LOGGER3 = logging.getLogger('kaco2pv.readings')
-#logging info for posting
+# logging info for posting
 LOGGER4 = logging.getLogger('kaco2pv.posting')
-#logging info for inverter
+# logging info for inverter
 LOGGER5 = logging.getLogger('kaco2pv.inverter')
 
 # Example log usage
-#LOGGER1.debug('Quick zephyrs blow, vexing daft Jim.')
-#LOGGER1.info('How quickly daft jumping zebras vex.')
-#LOGGER2.warning('Jail zesty vixen who grabbed pay from quack.')
-#LOGGER2.error('The five boxing wizards jump quickly.')
+# LOGGER1.debug('Quick zephyrs blow, vexing daft Jim.')
+# LOGGER1.info('How quickly daft jumping zebras vex.')
+# LOGGER2.warning('Jail zesty vixen who grabbed pay from quack.')
+# LOGGER2.error('The five boxing wizards jump quickly.')
 
 
 LOGGER1.info("pvs2pvo - (c) Ian Hutt 2014")
@@ -106,9 +108,12 @@ PVO_OUTPUT_URI = "/service/r2/addoutput.jsp"
 
 
 PVO_KEY = "7ed8a297d387d3887dbd8059c5d8544382a4a12b"
-PVO_SYSTEM_ID = "24657"                                  # Your PVoutput system ID here
-PVO_STATUS_INTERVAL = 5                                  # How often in minutes to update PVoutput
-SAMPLE_TIME = 10/3600					# Time in hours of updates from Kaco unit (normally 10 seconds)
+# Your PVoutput system ID here
+PVO_SYSTEM_ID = "24657"
+# How often in minutes to update PVoutput
+PVO_STATUS_INTERVAL = 5
+# Time in hours of updates from Kaco unit (normally 10 seconds)
+SAMPLE_TIME = 10/3600
 
 PV_DAILY_UPLOAD_TIME_HOUR = 23
 PV_DAILY_UPLOAD_TIME_MIN = 45
@@ -116,9 +121,11 @@ PV_DAILY_UPLOAD_TIME_MIN = 45
 
 TIME_NOW = datetime.datetime.now()
 PV_DAILY_UPLOAD_TIME = TIME_NOW.replace(hour=PV_DAILY_UPLOAD_TIME_HOUR,
-                                        minute=PV_DAILY_UPLOAD_TIME_MIN, second=0, microsecond=0)
+                                        minute=PV_DAILY_UPLOAD_TIME_MIN,
+                                        second=0, microsecond=0)
 
-LOCAL_ONLY_TESTING = False # True for local only, False turns on pvoutput upload
+# True for local only, False turns on pvoutput upload
+LOCAL_ONLY_TESTING = False
 
 _totalUse = 0.0
 totalGen = 0.0
@@ -134,11 +141,14 @@ minTemp = 100
 maxTemp = -100
 dailyReadings = 0
 lastOutput = time.localtime()
-lastOutput = time.gmtime(0) # set last daily summary output to epoch ie never
+# set last daily summary output to epoch ie never
+lastOutput = time.gmtime(0)
 peakGen = 0.0
 peakTime = time.localtime()
-sunriseHour = 9 # latest time after which it is decided that there aren't a full days readings
+# latest time after which it is decided that there aren't a full days readings
+sunriseHour = 9
 fullDaysReadings = False
+
 
 def num(stringToConvert):
     """ returns an int or float from string """
@@ -146,6 +156,7 @@ def num(stringToConvert):
         return int(stringToConvert)
     except ValueError:
         return float(stringToConvert)
+
 
 class powerReading:
     """ class containing power reading data """
@@ -180,8 +191,10 @@ class powerReading:
         """ returns generated current """
         return self._generatorCurrent
 
-    def __init__(self, timeOfReading, dailyRunTime, operatingState, generatorVoltage,
-                 generatorCurrent, generatorPower, lineVoltage, lineCurrentFeedIn,
+    def __init__(self, timeOfReading, dailyRunTime, operatingState,
+                 generatorVoltage,
+                 generatorCurrent,
+                 generatorPower, lineVoltage, lineCurrentFeedIn,
                  powerFeedIn, unitTemperature):
         self._timeOfReading = timeOfReading
         self._dailyRunTime = dailyRunTime
@@ -194,14 +207,15 @@ class powerReading:
         self._powerFeedIn = powerFeedIn
         self._unitTemperature = unitTemperature
 
+
 def post(uri, params):
     """ Performs posting to pvoutput.org """
-    if LOCAL_ONLY_TESTING != True:
+    if LOCAL_ONLY_TESTING not True:
         try:
             LOGGER4.debug("Posting results - " + params)
-            headers = {'X-Pvoutput-Apikey' : PVO_KEY,
-                       'X-Pvoutput-SystemId' : PVO_SYSTEM_ID,
-                       "Accept" : "text/plain",
+            headers = {'X-Pvoutput-Apikey': PVO_KEY,
+                       'X-Pvoutput-SystemId': PVO_SYSTEM_ID,
+                       "Accept": "text/plain",
                        "Content-type": "application/x-www-form-urlencoded"}
             conn = http.client.HTTPConnection(PVO_HOST)
 #               conn.set_debuglevel(2) # debug purposes only
@@ -224,45 +238,47 @@ def post(uri, params):
 def postPVstatus(pvsTimeOfReading, pvsEnergyGen,
                  pvsPowerGen, pvsEnergyUse, pvsPowerUse, pvsTemp, pvsVolts):
     """ Create string and pass it to status posting """
-    params = {'d' : time.strftime('%Y%m%d', pvsTimeOfReading),
-              't' : time.strftime('%H:%M', pvsTimeOfReading),
-              'v1' : pvsEnergyGen,
-              'v2' : pvsPowerGen,
-              'v3' : pvsEnergyUse,  # for later use if required
-              'v4' : pvsPowerUse,
-              'v5' : pvsTemp,
-              'v6' : pvsVolts,
-              'c1' : 0,
-              'n' : 0}
+    params = {'d': time.strftime('%Y%m%d', pvsTimeOfReading),
+              't': time.strftime('%H:%M', pvsTimeOfReading),
+              'v1': pvsEnergyGen,
+              'v2': pvsPowerGen,
+              'v3': pvsEnergyUse,  # for later use if required
+              'v4': pvsPowerUse,
+              'v5': pvsTemp,
+              'v6': pvsVolts,
+              'c1': 0,
+              'n': 0}
 
     LOGGER4.debug("Params:" + params)
     # POST the data
     return post(PVO_STATUS_URI, params)
 
-def postPVoutput(pvoDateOfOutput, pvoGenerated, pvoExported, pvoPeakPower, pvoPeakTime,
+
+def postPVoutput(pvoDateOfOutput, pvoGenerated, pvoExported, pvoPeakPower,
+                 pvoPeakTime,
                  pvoCondition, pvoMinTemp, pvoMaxTemp,
                  pvoImportPeak, pvoImportOffPeak, pvoImportShoulder,
                  pvoImportHighShoulder, pvoConsumption, pvoComment):
     """ Create string and pass it to post function """
-    params = {'d' : time.strftime('%Y%m%d', pvoDateOfOutput),
-              'g'  : pvoGenerated,
-              'e'  : pvoExported,
-              'pp' : pvoPeakPower,
-              'pt' : time.strftime('%H:%M', pvoPeakTime),
+    params = {'d': time.strftime('%Y%m%d', pvoDateOfOutput),
+              'g': pvoGenerated,
+              'e': pvoExported,
+              'pp': pvoPeakPower,
+              'pt': time.strftime('%H:%M', pvoPeakTime),
               # 'cd' : condition,
               # pvoutput automatically obtains weather data to find conditions
-              'tm' : pvoMinTemp,
-              'tx' : pvoMaxTemp,
-              'ip' : pvoImportPeak,
-              'io' : pvoImportOffPeak,
-              'is' : pvoImportShoulder,
-              'ih' : pvoImportHighShoulder,
-              'c'  : pvoConsumption,
+              'tm': pvoMinTemp,
+              'tx': pvoMaxTemp,
+              'ip': pvoImportPeak,
+              'io': pvoImportOffPeak,
+              'is': pvoImportShoulder,
+              'ih': pvoImportHighShoulder,
+              'c': pvoConsumption,
               'cm': 'EOD upload.'
                     + pvoComment}
     LOGGER4.debug("Params:" + params)
-    # POST the data
     return post(PVO_OUTPUT_URI, params)
+
 
 def addReading(newPowerReading):
     """ Add a power reading """
@@ -270,7 +286,7 @@ def addReading(newPowerReading):
     volts = newPowerReading.generatedVoltage()
     temperature = newPowerReading.temperature()
     amps = newPowerReading.generatedCurrent()
-    #timeNow = time.localtime()
+    # timeNow = time.localtime()
     timeNow = datetime.now()
 
     comment = ""
@@ -284,7 +300,8 @@ def addReading(newPowerReading):
     dailyGen += gen
     dailyEnergy += (gen*SAMPLE_TIME)
     dailyReadings += 1
-    LOGGER3.info("Gen:" + gen + "W " + dailyEnergy + "Wh " + volts + "V " + amps + "A")
+    LOGGER3.info("Gen:" + gen + "W " + dailyEnergy + "Wh "
+                 + volts + "V " + amps + "A")
     if gen > peakGen:
         peakGen = int(gen)
         peakTime = timeNow
@@ -300,7 +317,8 @@ def addReading(newPowerReading):
         avgCurrent = float(totalAmps / totalReadings)
         LOGGER3.info("Time to output status. avgGen:" +
                      avgGen + "W " + avgVoltage + "V " + avgCurrent + "A")
-        if postPVstatus(timeNow, dailyEnergy, avgGen, 0, 0, temperature, avgVoltage):
+        if postPVstatus(timeNow, dailyEnergy,
+                        avgGen, 0, 0, temperature, avgVoltage):
             lastStatus = timeNow
             totalGen = 0.0
             totalAmps = 0.0
@@ -339,6 +357,7 @@ def addReading(newPowerReading):
             LOGGER2.error("Failed to post daily output to pvoutput")
         fullDaysReadings = True
     sys.stdout.flush()
+
 
 def processReading(readingToProcess):
     """ Take string and process into component parts of reading """
@@ -417,4 +436,3 @@ except Exception as e:
 
 LOGGER1.info("Bye")
 sys.stdout.flush()
-
