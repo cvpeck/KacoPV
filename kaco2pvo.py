@@ -60,7 +60,7 @@ console.setFormatter(formatter)
 logging.getLogger('').addHandler(console)
 
 # Now, we can log to the root logger, or any other logger. First the root...
-logging.info('Jackdaws love my big sphinx of quartz.')
+#logging.info('Jackdaws love my big sphinx of quartz.')
 
 # Now, define a couple of other loggers which might represent areas in your
 # application:
@@ -77,10 +77,10 @@ logger4 = logger.getLogger('kaco2pv.posting')
 logger5 = logger.getLogger('kaco2pv.inverter')
 
 # Example log usage
-logger1.debug('Quick zephyrs blow, vexing daft Jim.')
-logger1.info('How quickly daft jumping zebras vex.')
-logger2.warning('Jail zesty vixen who grabbed pay from quack.')
-logger2.error('The five boxing wizards jump quickly.')
+#logger1.debug('Quick zephyrs blow, vexing daft Jim.')
+#logger1.info('How quickly daft jumping zebras vex.')
+#logger2.warning('Jail zesty vixen who grabbed pay from quack.')
+#logger2.error('The five boxing wizards jump quickly.')
 
 
 logger1.info("pvs2pvo - (c) Ian Hutt 2014")
@@ -103,6 +103,10 @@ sampleTime = 10/3600					# Time in hours of updates from Kaco unit (normally 10 
 
 pvDailyUploadTimeHour = 23 
 pvDailyUploadTimeMin = 45
+
+
+now = datetime.datetime.now()
+pvDailyuploadTime = now.replace(hour=pvDailyUploadTimeHour, minute=pvDailyUploadTimeMin, second=0, microsecond=0)
 
 localOnlyTesting = False # True for local only, False turns on pvoutput upload
 
@@ -237,7 +241,9 @@ def addReading(power):
     volts = power.generatedVoltage()
     temperature = power.temperature()
     amps = power.generatedCurrent()
-    timeNow = time.localtime()
+    #timeNow = time.localtime()
+    timeNow = datetime.datetime.now()
+
     comment = ""
     global totalGen, totalReadings, lastStatus, totalAmps, totalVolts
     totalGen += gen
@@ -248,7 +254,7 @@ def addReading(power):
     dailyGen += gen
     dailyEnergy += (gen*sampleTime)
     dailyReadings += 1
-    logger3.info(power.timeOfReading().strftime('%Y-%m-%d %H:%M:%S'), "Gen:", gen, "W ", dailyEnergy, "Wh ", volts,"V ", amps,"A")
+    logger3.info("Gen:", gen, "W ", dailyEnergy, "Wh ", volts,"V ", amps,"A")
     if (gen > peakGen):
         peakGen = int(gen)
         peakTime = timeNow
@@ -280,7 +286,7 @@ def addReading(power):
     logger2.debug("timeNow.tm_min = ",timeNow.tm_min)
     logger2.debug("timeNow.tm_day = ",timeNow.tm_mday)
     logger2.debug ("lastOutput.tm_mday = ",lastOutput.tm_mday)
-    if (timeNow.tm_hour >= pvDailyUploadTimeHour) and (timeNow.tm_min >= pvDailyUploadTimeMin) and (lastOutput.tm_mday != timeNow.tm_mday):
+    if (timeNow > pvDailyuploadTime) and (lastOutput.tm_mday != timeNow.tm_mday):
         daysGen = int((dailyGen / dailyReadings) * 24.0)
         logger2.info("Time to output EOD. DaysGen:", daysGen, "W")
         if not fullDaysReadings:
@@ -295,10 +301,10 @@ def addReading(power):
             peakTime = timeNow
             minTemp = 100
             maxTemp = -100
-            dailyEnergy = 0.0
+            dailyEnergy = 0
             logger2.info("EOD Output sucessfully sent to PVoutput")
         else:
-            logger2.error(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),"Failed to post daily output to pvoutput")
+            logger2.error("Failed to post daily output to pvoutput")
         fullDaysReadings = True
     sys.stdout.flush()
 
