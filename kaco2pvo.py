@@ -37,10 +37,55 @@
 from datetime import datetime
 import socket, time, serial, http.client, urllib, urllib.parse, sys, xml.etree.ElementTree as ET
 
-print("pvs2pvo - (c) Ian Hutt 2014")
-print("modified by Chris Peck for Kaco Inverters")
-print()
-print("Startup ", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime()))
+# Import requirements for logging
+import logging
+import auxiliary_module
+
+
+# Setup logging
+# set up logging to file
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                    datefmt='%m-%d %H:%M',
+                    filename='/var/log/solar/kaco2pv.log',
+                    filemode='w')
+# define a Handler which writes INFO messages or higher to the sys.stderr
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+# set a format which is simpler for console use
+formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
+# tell the handler to use this format
+console.setFormatter(formatter)
+# add the handler to the root logger
+logging.getLogger('').addHandler(console)
+
+# Now, we can log to the root logger, or any other logger. First the root...
+logging.info('Jackdaws love my big sphinx of quartz.')
+
+# Now, define a couple of other loggers which might represent areas in your
+# application:
+
+#general logging
+logger1 = logging.getLogger('kaco2pv.general')
+#logging info for daily output
+logger2 = logging.getLogger('kaco2pv.dailyreadings')
+#logging info for regular output
+logger3 = logger.getLogger('kaco2pv.readings')
+#logging info for posting
+logger4 = logger.getLogger('kaco2pv.posting')
+#logging info for inverter
+logger5 = logger.getLogger('kaco2pv.inverter')
+
+# Example log usage
+logger1.debug('Quick zephyrs blow, vexing daft Jim.')
+logger1.info('How quickly daft jumping zebras vex.')
+logger2.warning('Jail zesty vixen who grabbed pay from quack.')
+logger2.error('The five boxing wizards jump quickly.')
+
+
+logger1.info("pvs2pvo - (c) Ian Hutt 2014")
+logger1.info("modified by Chris Peck for Kaco Inverters")
+logger1.info("Startup ", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime()))
 
 pvs_device = "/dev/ttyUSB0"                             # May need changing
 pvs_min_pvp = 7.5                                       # PV generation values (W) less than this will be set to 0
@@ -129,7 +174,7 @@ class powerReading:
 def post( uri, params ):
     if (localOnlyTesting != True):
         try:
-                print("Posting results - ",params)
+                logger4.debug("Posting results - ",params)
                 headers = {'X-Pvoutput-Apikey' : pvo_key,
                            'X-Pvoutput-SystemId' : pvo_systemid,
                             "Accept" : "text/plain",
@@ -138,16 +183,16 @@ def post( uri, params ):
 #               conn.set_debuglevel(2) # debug purposes only
                 conn.request("POST", uri, urllib.parse.urlencode(params), headers)
                 response = conn.getresponse()
-                print("Status", response.status, "   Reason:", response.reason, "-", response.read())
+                logger4.debug("Status", response.status, "   Reason:", response.reason, "-", response.read())
                 sys.stdout.flush()
                 conn.close()
        	        return response.status == 200
         except Exception as e:
-                print("Exception posting results\n", e)
+                logger4.error("Exception posting results\n", e)
        	        sys.stdout.flush()
                 return False
     else:
-        print ("In testing mode - NOT posting results")
+        logger4.debug("In testing mode - NOT posting results")
         return True
         
 
@@ -163,7 +208,7 @@ def postPVstatus(timeOfReading, energyGen, powerGen, energyUse, powerUse, temp, 
            'c1' : 0,
            'n' : 0}
                   
-        print("Params:", params)
+        logger4.debug("Params:", params)
         # POST the data
         return post(pvo_statusuri, params)
 
@@ -183,7 +228,7 @@ def postPVoutput(dateOfOutput, generated, exported, peakPower, peakTime, conditi
 	    'ih' : importHighShoulder,
             'c'  : consumption,
             'cm': 'EOD upload. Readings since ' + time.strftime('%d/%m/%Y %H:%M:%S', startTime) + comment}
-        print("Params:", params)
+        logger4.debug("Params:", params)
         # POST the data
         return post(pvo_outputuri, params)
 
@@ -203,7 +248,7 @@ def addReading(power):
     dailyGen += gen
     dailyEnergy += (gen*sampleTime)
     dailyReadings += 1
-    print(power.timeOfReading().strftime('%Y-%m-%d %H:%M:%S'), "Gen:", gen, "W ", dailyEnergy, "Wh ", volts,"V ", amps,"A")
+    logger3.info(power.timeOfReading().strftime('%Y-%m-%d %H:%M:%S'), "Gen:", gen, "W ", dailyEnergy, "Wh ", volts,"V ", amps,"A")
     if (gen > peakGen):
         peakGen = int(gen)
         peakTime = timeNow
@@ -217,7 +262,7 @@ def addReading(power):
         avgGen = float(totalGen / totalReadings)
         avgVoltage = float(totalVolts / totalReadings)
         avgCurrent = float(totalAmps / totalReadings)
-        print("Time to output status. avgGen:", avgGen, "W ", avgVoltage, "V ", avgCurrent,"A")
+        logger3.info("Time to output status. avgGen:", avgGen, "W ", avgVoltage, "V ", avgCurrent,"A")
         if postPVstatus(timeNow, dailyEnergy, avgGen, 0, 0,  temperature, avgVoltage):
             lastStatus = timeNow
             totalUse = 0.0
@@ -225,21 +270,21 @@ def addReading(power):
             totalAmps = 0.0
             totalVolts = 0.0
             totalReadings = 0
-            print("Status update sucessfully sent to PVoutput")
+            logger3.info("Status update sucessfully sent to PVoutput")
         else:
             lastStatus = timeNow
-            print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),"Failed to post status to pvoutput")
+            logger3,error(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),"Failed to post status to pvoutput")
         sys.stdout.flush()
-    #print ("Debugging daily sumary")
-    #print ("timeNow.tm_hour = ",timeNow.tm_hour)
-    #print ("timeNow.tm_min = ",timeNow.tm_min)
-    #print ("timeNow.tm_day = ",timeNow.tm_mday)
-    #print ("lastOutput.tm_mday = ",lastOutput.tm_mday)
+    logger2.debug("Debugging daily sumary")
+    logger2.debug("timeNow.tm_hour = ",timeNow.tm_hour)
+    logger2.debug("timeNow.tm_min = ",timeNow.tm_min)
+    logger2.debug("timeNow.tm_day = ",timeNow.tm_mday)
+    logger2.debug ("lastOutput.tm_mday = ",lastOutput.tm_mday)
     if (timeNow.tm_hour >= pvDailyUploadTimeHour) and (timeNow.tm_min >= pvDailyUploadTimeMin) and (lastOutput.tm_mday != timeNow.tm_mday):
         daysGen = int((dailyGen / dailyReadings) * 24.0)
-        print("Time to output EOD. DaysGen:", daysGen, "W")
+        logger2.info("Time to output EOD. DaysGen:", daysGen, "W")
         if not fullDaysReadings:
-            print(" Incomplete days readings.")
+            logger2.info(" Incomplete days readings.")
             comment = " Incomplete readings for days"
         if postPVoutput(timeNow, daysGen, 0, peakGen, peakTime, 'Not Sure', minTemp, maxTemp, 0, 0, 0, 0, 0, comment):
             lastOutput = timeNow
@@ -251,37 +296,36 @@ def addReading(power):
             minTemp = 100
             maxTemp = -100
             dailyEnergy = 0.0
-            print("EOD Output sucessfully sent to PVoutput")
+            logger2.info("EOD Output sucessfully sent to PVoutput")
         else:
-            print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),"Failed to post daily output to pvoutput")
+            logger2.error(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),"Failed to post daily output to pvoutput")
         fullDaysReadings = True
     sys.stdout.flush()
 
 def processReading(reading):
-    print("Reading data", reading) #comment out when running cvp
+    logger5.debug("Reading data", reading)
     readings = reading.split()
     placeHolder = readings[0]
-    print("placeHolder = ",placeHolder)
+    logger5.debug("placeHolder = ",placeHolder)
     dailyRunTime = readings[1]
-    print("dailyRunTime = ",dailyRunTime)
+    logger5.debug("dailyRunTime = ",dailyRunTime)
     operatingState = readings[2]
-    print("operatingState = ",operatingState)
+    logger5.debug("operatingState = ",operatingState)
     generatorVoltage = num(readings[3])
-    print("generatorVoltage = ",generatorVoltage)
+    logger5.debug("generatorVoltage = ",generatorVoltage)
     generatorCurrent = num(readings[4])
-    print("generatorCurrent = ",generatorCurrent)
+    logger5.debug("generatorCurrent = ",generatorCurrent)
     generatorPower = num(readings[5])
-    print("generatorPower = ",generatorPower)
+    logger5.debug("generatorPower = ",generatorPower)
     lineVoltage = num(readings[6])
-    print("lineVoltage = ",lineVoltage)
+    loggger5.debug("lineVoltage = ",lineVoltage)
     lineCurrentFeedIn = num(readings[7])
-    print("lineCurrentFeedIn = ",lineCurrentFeedIn)
+    logger5.debug("lineCurrentFeedIn = ",lineCurrentFeedIn)
     powerFeedIn = num(readings[8])
-    print("powerFeedIn = ",powerFeedIn)
+    logger5.debug("powerFeedIn = ",powerFeedIn)
     unitTemperature = num(readings[9])
-    print("unitTemperature = ",unitTemperature)
-    print("Processing data")
-#    print("Gen:", generatorPower, "W")
+    logger5.debug("unitTemperature = ",unitTemperature)
+    logger5.debug("Processing data")
     if (generatorPower < pvs_min_pvp):
         generatorPower = 0
     elif (generatorPower > pvs_max_pvp):
@@ -291,17 +335,17 @@ def processReading(reading):
     addReading(reading)
         
 try:
-    print("Opening PV inverter serial port on ", pvs_device )
+    logger5.info("Opening PV inverter serial port on ", pvs_device )
     com=serial.Serial(pvs_device, baudrate=9600, bytesize=8, parity='N', stopbits=1, xonxoff=0, timeout=5.0)
     com.open()
 
     if com.isOpen():
         com.flush
-        print("PV inverter connection opened")
+        logger5.info("PV inverter connection opened")
     else:
-        print("Unable to open connection to PV inverter")
+        logger5.error("Unable to open connection to PV inverter")
 
-    print("Processing PV inverter data")
+    logger5.info("Processing PV inverter data")
 
     startTime = time.localtime()
     fullDaysReadings = startTime.tm_hour < sunriseHour
@@ -312,8 +356,8 @@ try:
         try:
             buffer += com.read(max(1,com.inWaiting())).decode('utf-8', "replace")
         except Exception as ex:
-            print("Exception reading from PV inverter. Terminating\n", ex)
-            print("Check that another process is not using device")
+            logger5.error("Exception reading from PV inverter. Terminating\n", ex)
+            logger5.error("Check that another process is not using device")
             com.close()
             sys.stdout.flush()    
         if '\r' in buffer:
@@ -324,10 +368,10 @@ try:
 
     com.close()
 except Exception as e:
-    print("Exception processing PV inverter data. Terminating\n", e)
+    logger1.error("Exception processing PV inverter data. Terminating\n", e)
     sys.stdout.flush()
 
 
-print("Bye")
+logger1.info("Bye")
 sys.stdout.flush()
 
