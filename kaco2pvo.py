@@ -42,7 +42,6 @@
 #
 
 from datetime import datetime
-import time
 import serial
 import sys
 
@@ -132,7 +131,7 @@ totalGen = 0.0
 totalAmps = 0.0
 totalVolts = 0.0
 totalReadings = 0
-lastStatus = time.localtime()
+lastStatus = datetime.now()
 
 dailyUse = 0.0
 dailyGen = 0.0
@@ -140,11 +139,11 @@ dailyEnergy = 0.0
 minTemp = 100
 maxTemp = -100
 dailyReadings = 0
-lastOutput = time.localtime()
+lastOutput = datetime.now()
 # set last daily summary output to epoch ie never
-lastOutput = time.gmtime(0)
+lastOutput = datetime.utcnow()
 peakGen = 0.0
-peakTime = time.localtime()
+peakTime = datetime.now()
 # latest time after which it is decided that there aren't a full days readings
 sunriseHour = 9
 fullDaysReadings = False
@@ -309,7 +308,7 @@ def addReading(newPowerReading):
         maxTemp = temperature
     if temperature < minTemp:
         minTemp = temperature
-    if (timeNow.tm_min % PVO_STATUS_INTERVAL == 0) & (lastStatus.tm_min != timeNow.tm_min):
+    if (timeNow.minute % PVO_STATUS_INTERVAL == 0) & (lastStatus.minute != timeNow.minute):
         # You may wish to modify the simplistic averaging for something
         # more sophisticated like weighted average or kalman
         avgGen = float(totalGen / totalReadings)
@@ -332,11 +331,11 @@ def addReading(newPowerReading):
                           "Failed to post status to pvoutput")
         sys.stdout.flush()
     LOGGER2.debug("Debugging daily sumary")
-    LOGGER2.debug("timeNow.tm_hour = " + timeNow.tm_hour)
-    LOGGER2.debug("timeNow.tm_min = " + timeNow.tm_min)
-    LOGGER2.debug("timeNow.tm_day = " + timeNow.tm_mday)
-    LOGGER2.debug("lastOutput.tm_mday = " + lastOutput.tm_mday)
-    if (timeNow > PV_DAILY_UPLOAD_TIME) and (lastOutput.tm_mday != timeNow.tm_mday):
+    LOGGER2.debug("timeNow.hour = " + timeNow.hour)
+    LOGGER2.debug("timeNow.minute = " + timeNow.minute)
+    LOGGER2.debug("timeNow.day = " + timeNow.day)
+    LOGGER2.debug("lastOutput.day = " + lastOutput.day)
+    if (timeNow > PV_DAILY_UPLOAD_TIME) and (lastOutput.day != timeNow.day):
         daysGen = int((dailyGen / dailyReadings) * 24.0)
         LOGGER2.info("Time to output EOD. DaysGen:" + daysGen + "W")
         if not fullDaysReadings:
@@ -409,8 +408,8 @@ try:
 
     LOGGER5.info("Processing PV inverter data")
 
-    START_TIME = time.localtime()
-    fullDaysReadings = START_TIME.tm_hour < sunriseHour
+    START_TIME = datetime.now()
+    fullDaysReadings = START_TIME.hour < sunriseHour
 
     sys.stdout.flush()
     myBuffer = ''
