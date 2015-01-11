@@ -119,7 +119,7 @@ PV_DAILY_UPLOAD_TIME_HOUR = 23
 PV_DAILY_UPLOAD_TIME_MIN = 45
 
 
-TIME_NOW = datetime.datetime.now()
+TIME_NOW = datetime.now()
 PV_DAILY_UPLOAD_TIME = TIME_NOW.replace(hour=PV_DAILY_UPLOAD_TIME_HOUR,
                                         minute=PV_DAILY_UPLOAD_TIME_MIN,
                                         second=0, microsecond=0)
@@ -210,7 +210,7 @@ class powerReading:
 
 def post(uri, params):
     """ Performs posting to pvoutput.org """
-    if LOCAL_ONLY_TESTING not True:
+    if not LOCAL_ONLY_TESTING:
         try:
             LOGGER4.debug("Posting results - " + params)
             headers = {'X-Pvoutput-Apikey': PVO_KEY,
@@ -300,8 +300,8 @@ def addReading(newPowerReading):
     dailyGen += gen
     dailyEnergy += (gen*SAMPLE_TIME)
     dailyReadings += 1
-    LOGGER3.info("Gen:" + gen + "W " + dailyEnergy + "Wh "
-                 + volts + "V " + amps + "A")
+    LOGGER3.info("Gen:" + str(gen) + "W " + str(dailyEnergy) + "Wh "
+                 + str(volts) + "V " + str(amps) + "A")
     if gen > peakGen:
         peakGen = int(gen)
         peakTime = timeNow
@@ -370,19 +370,19 @@ def processReading(readingToProcess):
     operatingState = myReadings[2]
     LOGGER5.debug("operatingState = " + operatingState)
     generatorVoltage = num(myReadings[3])
-    LOGGER5.debug("generatorVoltage = " + generatorVoltage)
+    LOGGER5.debug("generatorVoltage = " + str(generatorVoltage))
     generatorCurrent = num(myReadings[4])
-    LOGGER5.debug("generatorCurrent = " + generatorCurrent)
+    LOGGER5.debug("generatorCurrent = " + str(generatorCurrent))
     generatorPower = num(myReadings[5])
-    LOGGER5.debug("generatorPower = " + generatorPower)
+    LOGGER5.debug("generatorPower = " + str(generatorPower))
     lineVoltage = num(myReadings[6])
-    LOGGER5.debug("lineVoltage = " + lineVoltage)
+    LOGGER5.debug("lineVoltage = " + str(lineVoltage))
     lineCurrentFeedIn = num(myReadings[7])
-    LOGGER5.debug("lineCurrentFeedIn = " + lineCurrentFeedIn)
+    LOGGER5.debug("lineCurrentFeedIn = " + str(lineCurrentFeedIn))
     powerFeedIn = num(myReadings[8])
-    LOGGER5.debug("powerFeedIn = " + powerFeedIn)
+    LOGGER5.debug("powerFeedIn = " + str(powerFeedIn))
     unitTemperature = num(myReadings[9])
-    LOGGER5.debug("unitTemperature = " + unitTemperature)
+    LOGGER5.debug("unitTemperature = " + str(unitTemperature))
     LOGGER5.debug("Processing data")
     if generatorPower < PVS_MIN_PVP:
         generatorPower = 0
@@ -418,7 +418,7 @@ try:
         try:
             myBuffer += COM_PORT.read(max(1, COM_PORT.inWaiting())).decode('utf-8', "replace")
         except Exception as ex:
-            LOGGER5.error("Exception reading from PV inverter. Terminating\n" + ex)
+            LOGGER5.error("Exception reading from PV inverter. Terminating\n" + str(ex))
             LOGGER5.error("Check that another process is not using device")
             COM_PORT.close()
             sys.stdout.flush()
@@ -430,7 +430,7 @@ try:
 
     COM_PORT.close()
 except Exception as e:
-    LOGGER1.error("Exception processing PV inverter data. Terminating\n" + e)
+    LOGGER1.error("Exception processing PV inverter data. Terminating\n" + str(e))
     sys.stdout.flush()
 
 
