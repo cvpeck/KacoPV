@@ -44,6 +44,7 @@
 from datetime import datetime
 import serial
 import sys
+from time import time
 
 # Import requirements for logging
 import logging
