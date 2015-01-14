@@ -47,6 +47,10 @@ import sys
 
 # Import requirements for logging
 import logging
+import logging.handlers
+
+LOG_FILENAME = '/var/log/solar/kaco2pv.log'
+LOG_READINGS_FILENAME = '/var/log/solar/kaco2pv_readings.log'
 
 
 # Setup logging
@@ -54,7 +58,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
                     datefmt='%m-%d %H:%M',
-                    filename='/var/log/solar/kaco2pv.log',
+                    filename=LOG_FILENAME,
                     filemode='w')
 # define a Handler which writes INFO messages or higher to the sys.stderr
 CONSOLE = logging.StreamHandler()
@@ -83,12 +87,45 @@ LOGGER4 = logging.getLogger('kaco2pv.posting')
 # logging info for inverter
 LOGGER5 = logging.getLogger('kaco2pv.inverter')
 
+
+# Now, we can log to the root logger, or any other logger. First the root...
+# logging.info('Jackdaws love my big sphinx of quartz.')
+
+# Now, define a couple of other loggers which might represent areas in your
+# application:
+
+# general logging
+LOGGER1 = logging.getLogger('kaco2pv.general')
+# logging info for daily output
+LOGGER2 = logging.getLogger('kaco2pv.dailyreadings')
+# logging info for regular output
+LOGGER3 = logging.getLogger('kaco2pv.readings')
+# logging info for posting
+LOGGER4 = logging.getLogger('kaco2pv.posting')
+# logging info for inverter
+LOGGER5 = logging.getLogger('kaco2pv.inverter')
+
+
+# Now logging specifically of the data received from the inverter
+
+LOGGER6 = logging.getLogger('')
+pvdata = logging.handlers.TimedRotatingFileHandler(LOG_READINGS_FILENAME,
+                                                   when='midnight',
+                                                   interval=1,
+                                                   backupCount=14,
+                                                   encoding=None,
+                                                   delay=False,
+                                                   utc=False)
+pvdata.setLevel(logging.INFO)
+formatter = logging.Formatter('%(message)s')
+pvdata.setFormatter(formatter)
+LOGGER6.addHandler(pvdata)
+
 # Example log usage
 # LOGGER1.debug('Quick zephyrs blow, vexing daft Jim.')
 # LOGGER1.info('How quickly daft jumping zebras vex.')
 # LOGGER2.warning('Jail zesty vixen who grabbed pay from quack.')
 # LOGGER2.error('The five boxing wizards jump quickly.')
-
 
 LOGGER1.info("pvs2pvo - (c) Ian Hutt 2014")
 LOGGER1.info("modified by Chris Peck for Kaco Inverters")
@@ -264,8 +301,6 @@ def postPVoutput(pvoDateOfOutput, pvoGenerated, pvoExported, pvoPeakPower,
               'e': pvoExported,
               'pp': pvoPeakPower,
               'pt': time.strftime('%H:%M', pvoPeakTime),
-              # 'cd' : condition,
-              # pvoutput automatically obtains weather data to find conditions
               'tm': pvoMinTemp,
               'tx': pvoMaxTemp,
               'ip': pvoImportPeak,
@@ -360,6 +395,7 @@ def addReading(newPowerReading):
 
 def processReading(readingToProcess):
     """ Take string and process into component parts of reading """
+    LOGGER6.INFO(readingToProcess)
     LOGGER5.debug("Reading data" + readingToProcess)
     myReadings = readingToProcess.split()
     placeHolder = myReadings[0]
