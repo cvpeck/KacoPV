@@ -395,7 +395,7 @@ def addReading(newPowerReading):
 
 def processReading(readingToProcess):
     """ Take string and process into component parts of reading """
-    LOGGER6.INFO(readingToProcess)
+    LOGGER6.info(readingToProcess)
     LOGGER5.debug("Reading data" + readingToProcess)
     myReadings = readingToProcess.split()
     placeHolder = myReadings[0]
