@@ -347,11 +347,11 @@ def addReading(newPowerReading):
                                         time.localtime()),
                           "Failed to post status to pvoutput")
         sys.stdout.flush()
-    LOGGER2.debug("Debugging daily sumary")
-    LOGGER2.debug("timeNow.hour = " + timeNow.hour)
-    LOGGER2.debug("timeNow.minute = " + timeNow.minute)
-    LOGGER2.debug("timeNow.day = " + timeNow.day)
-    LOGGER2.debug("lastOutput.day = " + lastOutput.day)
+    LOGGER2.debug("Debugging daily summary")
+    LOGGER2.debug("timeNow.hour = " + str(timeNow.hour))
+    LOGGER2.debug("timeNow.minute = " + str(timeNow.minute))
+    LOGGER2.debug("timeNow.day = " + str(timeNow.day))
+    LOGGER2.debug("lastOutput.day = " + str(lastOutput.day))
     if (timeNow > PV_DAILY_UPLOAD_TIME) and (lastOutput.day != timeNow.day):
         daysGen = int((dailyGen / dailyReadings) * 24.0)
         LOGGER2.info("Time to output EOD. DaysGen:" + str(daysGen) + "W")
