@@ -263,7 +263,7 @@ def post(uri, params):
             conn.close()
             return response.status == 200
         except Exception as e:
-            LOGGER4.error("Exception posting results\n" + e)
+            LOGGER4.error("Exception posting results\n" + str(e))
             sys.stdout.flush()
             return False
     else:
@@ -350,7 +350,7 @@ def addReading(newPowerReading):
         avgVoltage = float(totalVolts / totalReadings)
         avgCurrent = float(totalAmps / totalReadings)
         LOGGER3.info("Time to output status. avgGen:" +
-                     avgGen + "W " + avgVoltage + "V " + avgCurrent + "A")
+                     str(avgGen) + "W " + str(avgVoltage) + "V " + str(avgCurrent) + "A")
         if postPVstatus(timeNow, dailyEnergy,
                         avgGen, 0, 0, temperature, avgVoltage):
             lastStatus = timeNow
@@ -372,7 +372,7 @@ def addReading(newPowerReading):
     LOGGER2.debug("lastOutput.day = " + lastOutput.day)
     if (timeNow > PV_DAILY_UPLOAD_TIME) and (lastOutput.day != timeNow.day):
         daysGen = int((dailyGen / dailyReadings) * 24.0)
-        LOGGER2.info("Time to output EOD. DaysGen:" + daysGen + "W")
+        LOGGER2.info("Time to output EOD. DaysGen:" + str(daysGen) + "W")
         if not fullDaysReadings:
             LOGGER2.info(" Incomplete days readings.")
             comment = " Incomplete readings for days"
@@ -401,9 +401,9 @@ def processReading(readingToProcess):
     placeHolder = myReadings[0]
     LOGGER5.debug("placeHolder = " + placeHolder)
     dailyRunTime = myReadings[1]
-    LOGGER5.debug("dailyRunTime = " + dailyRunTime)
+    LOGGER5.debug("dailyRunTime = " + str(dailyRunTime))
     operatingState = myReadings[2]
-    LOGGER5.debug("operatingState = " + operatingState)
+    LOGGER5.debug("operatingState = " + str(operatingState))
     generatorVoltage = num(myReadings[3])
     LOGGER5.debug("generatorVoltage = " + str(generatorVoltage))
     generatorCurrent = num(myReadings[4])
