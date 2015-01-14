@@ -62,31 +62,13 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode='w')
 # define a Handler which writes INFO messages or higher to the sys.stderr
 CONSOLE = logging.StreamHandler()
-CONSOLE.setLevel(logging.INFO)
+CONSOLE.setLevel(logging.DEBUG) #was info
 # set a format which is simpler for console use
 FORMATTER = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
 # tell the handler to use this format
 CONSOLE.setFormatter(FORMATTER)
 # add the handler to the root logger
 logging.getLogger('').addHandler(CONSOLE)
-
-# Now, we can log to the root logger, or any other logger. First the root...
-# logging.info('Jackdaws love my big sphinx of quartz.')
-
-# Now, define a couple of other loggers which might represent areas in your
-# application:
-
-# general logging
-LOGGER1 = logging.getLogger('kaco2pv.general')
-# logging info for daily output
-LOGGER2 = logging.getLogger('kaco2pv.dailyreadings')
-# logging info for regular output
-LOGGER3 = logging.getLogger('kaco2pv.readings')
-# logging info for posting
-LOGGER4 = logging.getLogger('kaco2pv.posting')
-# logging info for inverter
-LOGGER5 = logging.getLogger('kaco2pv.inverter')
-
 
 # Now, we can log to the root logger, or any other logger. First the root...
 # logging.info('Jackdaws love my big sphinx of quartz.')
@@ -431,7 +413,7 @@ def processReading(readingToProcess):
     addReading(newReading)
 
 try:
-    LOGGER5.info("Opening PV inverter serial port on " + PVS_DEVICE)
+    LOGGER5.info("Opening PV inverter serial port on " + str(PVS_DEVICE))
     COM_PORT = serial.Serial(PVS_DEVICE, baudrate=9600, bytesize=8,
                              parity='N', stopbits=1, xonxoff=0, timeout=5.0)
     COM_PORT.open()
