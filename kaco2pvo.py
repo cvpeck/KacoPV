@@ -90,7 +90,7 @@ LOGGER5 = logging.getLogger('kaco2pv.inverter')
 
 # Now logging specifically of the data received from the inverter
 
-LOGGER6 = logging.getLogger('')
+LOGGER6 = logging.getLogger('kaco2pv.raw')
 pvdata = logging.handlers.TimedRotatingFileHandler(LOG_READINGS_FILENAME,
                                                    when='midnight',
                                                    interval=1,
@@ -268,7 +268,7 @@ def postPVstatus(pvsTimeOfReading, pvsEnergyGen,
               'c1': 0,
               'n': 0}
 
-    LOGGER4.debug("Params:" + params)
+    LOGGER4.debug("Params:" + str(params))
     # POST the data
     return post(PVO_STATUS_URI, params)
 
@@ -293,7 +293,7 @@ def postPVoutput(pvoDateOfOutput, pvoGenerated, pvoExported, pvoPeakPower,
               'c': pvoConsumption,
               'cm': 'EOD upload.'
                     + pvoComment}
-    LOGGER4.debug("Params:" + params)
+    LOGGER4.debug("Params:" + str(params))
     return post(PVO_OUTPUT_URI, params)
 
 
