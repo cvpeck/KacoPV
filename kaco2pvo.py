@@ -45,6 +45,9 @@ from datetime import datetime
 import serial
 import sys
 
+#Import requirements for posting
+import http.client
+
 # Import requirements for logging
 import logging
 import logging.handlers
