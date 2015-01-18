@@ -47,6 +47,7 @@ import sys
 
 #Import requirements for posting
 import http.client
+import urllib, urllib.parse
 
 # Import requirements for logging
 import logging
