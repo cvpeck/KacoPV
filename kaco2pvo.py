@@ -151,7 +151,7 @@ totalGen = 0.0
 totalAmps = 0.0
 totalVolts = 0.0
 totalReadings = 0
-lastStatus = datetime.min()
+lastStatus = datetime.min
 
 dailyUse = 0.0
 dailyGen = 0.0
@@ -159,7 +159,7 @@ dailyEnergy = 0.0
 minTemp = 100
 maxTemp = -100
 dailyReadings = 0
-lastOutput = datetime.min()
+lastOutput = datetime.min
 # set last daily summary output to epoch ie never
 peakGen = 0.0
 peakTime = datetime.now()
