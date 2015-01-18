@@ -44,7 +44,6 @@
 from datetime import datetime
 import serial
 import sys
-import time
 
 # Import requirements for logging
 import logging
@@ -256,8 +255,10 @@ def post(uri, params):
 def postPVstatus(pvsTimeOfReading, pvsEnergyGen,
                  pvsPowerGen, pvsEnergyUse, pvsPowerUse, pvsTemp, pvsVolts):
     """ Create string and pass it to status posting """
-    params = {'d': time.strftime('%Y%m%d', pvsTimeOfReading),
-              't': time.strftime('%H:%M', pvsTimeOfReading),
+    LOGGER4.debug("In postPVstatus")
+    LOGGER4.debug("Constructing params")
+    params = {'d': pvsTimeOfReading.strftime('%Y%m%d'),
+              't': pvsTimeOfReading.strftime('%H:%M'),
               'v1': pvsEnergyGen,
               'v2': pvsPowerGen,
               'v3': pvsEnergyUse,  # for later use if required
@@ -278,11 +279,11 @@ def postPVoutput(pvoDateOfOutput, pvoGenerated, pvoExported, pvoPeakPower,
                  pvoImportPeak, pvoImportOffPeak, pvoImportShoulder,
                  pvoImportHighShoulder, pvoConsumption, pvoComment):
     """ Create string and pass it to post function """
-    params = {'d': time.strftime('%Y%m%d', pvoDateOfOutput),
+    params = {'d': pvoDateOfOutput.strftime('%Y%m%d'),
               'g': pvoGenerated,
               'e': pvoExported,
               'pp': pvoPeakPower,
-              'pt': time.strftime('%H:%M', pvoPeakTime),
+              'pt': pvoPeakTime.strftime('%H:%M'),
               'tm': pvoMinTemp,
               'tx': pvoMaxTemp,
               'ip': pvoImportPeak,
