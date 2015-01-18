@@ -428,7 +428,7 @@ try:
     LOGGER5.info("Processing PV inverter data")
 
     START_TIME = datetime.now()
-    if START_TIME.hour < sunriseHour:
+    if START_TIME.hour > sunriseHour:
         fullDaysReadings = False
         LOGGER5.info("Not a full days readings")
     else:
@@ -453,7 +453,7 @@ try:
 
     COM_PORT.close()
 except Exception as e:
-    LOGGER1.error("Exception processing PV inverter data. Terminating\n" + str(e))
+    LOGGER1.error("Exception processing PV inverter data. Terminating\n" + str(e) + str(sys.exc_info()[0]))
     sys.stdout.flush()
 
 
