@@ -453,7 +453,7 @@ try:
 
     COM_PORT.close()
 except Exception as e:
-    LOGGER1.error("Exception processing PV inverter data. Terminating"
+    LOGGER1.error("Exception processing PV inverter data. Terminating")
     LOGGER1.error(str(e))
     LOGGER1.error(str(sys.exc_info()[0]))
     sys.stdout.flush()
