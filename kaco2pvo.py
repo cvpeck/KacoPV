@@ -229,7 +229,7 @@ def post(uri, params):
     """ Performs posting to pvoutput.org """
     if not LOCAL_ONLY_TESTING:
         try:
-            LOGGER4.debug("Posting results - " + params)
+            LOGGER4.debug("Posting results - " + str(params))
             headers = {'X-Pvoutput-Apikey': PVO_KEY,
                        'X-Pvoutput-SystemId': PVO_SYSTEM_ID,
                        "Accept": "text/plain",
@@ -238,8 +238,8 @@ def post(uri, params):
 #               conn.set_debuglevel(2) # debug purposes only
             conn.request("POST", uri, urllib.parse.urlencode(params), headers)
             response = conn.getresponse()
-            LOGGER4.debug("Status" + response.status + "   Reason:" +
-                          response.reason + "-" + response.read())
+            LOGGER4.debug("Status" + str(response.status) + "   Reason:" +
+                          str(response.reason) + "-" + str(response.read()))
             sys.stdout.flush()
             conn.close()
             return response.status == 200
