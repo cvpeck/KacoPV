@@ -151,7 +151,7 @@ totalGen = 0.0
 totalAmps = 0.0
 totalVolts = 0.0
 totalReadings = 0
-lastStatus = datetime.now()
+lastStatus = datetime.min()
 
 dailyUse = 0.0
 dailyGen = 0.0
@@ -159,9 +159,8 @@ dailyEnergy = 0.0
 minTemp = 100
 maxTemp = -100
 dailyReadings = 0
-lastOutput = datetime.now()
+lastOutput = datetime.min()
 # set last daily summary output to epoch ie never
-lastOutput = datetime.utcnow()
 peakGen = 0.0
 peakTime = datetime.now()
 # latest time after which it is decided that there aren't a full days readings
@@ -353,12 +352,13 @@ def addReading(newPowerReading):
     LOGGER2.debug("timeNow.minute = " + str(timeNow.minute))
     LOGGER2.debug("timeNow.day = " + str(timeNow.day))
     LOGGER2.debug("lastOutput.day = " + str(lastOutput.day))
-    if (timeNow > PV_DAILY_UPLOAD_TIME) and (lastOutput.day != timeNow.day):
+    if (timeNow > PV_DAILY_UPLOAD_TIME) and (timeNow.day > lastOutput.day):
         daysGen = int((dailyGen / dailyReadings) * 24.0)
-        LOGGER2.info("Time to output EOD. DaysGen:" + str(daysGen) + "W")
+        LOGGER2.info("Time to output EOD")
+        LOGGER2.info("DaysGen:" + str(daysGen) + "W")
         if not fullDaysReadings:
-            LOGGER2.info(" Incomplete days readings.")
-            comment = " Incomplete readings for days"
+            LOGGER2.info("Incomplete days readings.")
+            comment = "Incomplete readings for days"
         if postPVoutput(timeNow, daysGen, 0, peakGen, peakTime, 'Not Sure',
                         minTemp, maxTemp, 0, 0, 0, 0, 0, comment):
             lastOutput = timeNow
@@ -428,7 +428,12 @@ try:
     LOGGER5.info("Processing PV inverter data")
 
     START_TIME = datetime.now()
-    fullDaysReadings = START_TIME.hour < sunriseHour
+    if START_TIME.hour < sunriseHour:
+        fullDaysReadings = False
+        LOGGER5.info("Not a full days readings")
+    else:
+        fullDaysReadings = True
+        LOGGER5.info("A full days readings")
 
     sys.stdout.flush()
     myBuffer = ''
