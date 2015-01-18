@@ -303,7 +303,6 @@ def addReading(newPowerReading):
     volts = newPowerReading.generatedVoltage()
     temperature = newPowerReading.temperature()
     amps = newPowerReading.generatedCurrent()
-    # timeNow = time.localtime()
     timeNow = datetime.now()
 
     comment = ""
@@ -344,9 +343,7 @@ def addReading(newPowerReading):
             LOGGER3.info("Status update sucessfully sent to PVoutput")
         else:
             lastStatus = timeNow
-            LOGGER3.error(time.strftime('%Y-%m-%d %H:%M:%S',
-                                        time.localtime()),
-                          "Failed to post status to pvoutput")
+            LOGGER3.error("Failed to post status to pvoutput")
         sys.stdout.flush()
     LOGGER2.debug("Debugging daily summary")
     LOGGER2.debug("timeNow.hour = " + str(timeNow.hour))
