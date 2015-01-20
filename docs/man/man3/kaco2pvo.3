@@ -1,0 +1,460 @@
+.TH "kaco2pvo" 3 "Tue Jan 20 2015" "kaco2pv" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+kaco2pvo \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBpowerReading\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "def \fBnum\fP (stringToConvert)"
+.br
+.ti -1c
+.RI "def \fBpost\fP (uri, params)"
+.br
+.ti -1c
+.RI "def \fBpostPVstatus\fP (pvsTimeOfReading, pvsEnergyGen, pvsPowerGen, pvsEnergyUse, pvsPowerUse, pvsTemp, pvsVolts)"
+.br
+.ti -1c
+.RI "def \fBpostPVoutput\fP (pvoDateOfOutput, pvoGenerated, pvoExported, pvoPeakPower, pvoPeakTime, pvoCondition, pvoMinTemp, pvoMaxTemp, pvoImportPeak, pvoImportOffPeak, pvoImportShoulder, pvoImportHighShoulder, pvoConsumption, pvoComment)"
+.br
+.ti -1c
+.RI "def \fBaddReading\fP (newPowerReading)"
+.br
+.ti -1c
+.RI "def \fBprocessReading\fP (readingToProcess)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "string \fBLOG_FILENAME\fP = '/var/log/solar/kaco2pv\&.log'"
+.br
+.ti -1c
+.RI "string \fBLOG_READINGS_FILENAME\fP = '/var/log/solar/kaco2pv_readings\&.log'"
+.br
+.ti -1c
+.RI "string \fBformat\fP = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'"
+.br
+.ti -1c
+.RI "string \fBdatefmt\fP = '%m-%d %H:%M'"
+.br
+.ti -1c
+.RI "\fBfilename\fP = \fBLOG_FILENAME\fP,"
+.br
+.ti -1c
+.RI "string \fBfilemode\fP = 'w'"
+.br
+.ti -1c
+.RI "tuple \fBCONSOLE\fP = logging\&.StreamHandler()"
+.br
+.ti -1c
+.RI "tuple \fBFORMATTER\fP = logging\&.Formatter('%(name)-12s: %(levelname)-8s %(message)s')"
+.br
+.ti -1c
+.RI "tuple \fBLOGGER1\fP = logging\&.getLogger('kaco2pv\&.general')"
+.br
+.ti -1c
+.RI "tuple \fBLOGGER2\fP = logging\&.getLogger('kaco2pv\&.dailyreadings')"
+.br
+.ti -1c
+.RI "tuple \fBLOGGER3\fP = logging\&.getLogger('kaco2pv\&.readings')"
+.br
+.ti -1c
+.RI "tuple \fBLOGGER4\fP = logging\&.getLogger('kaco2pv\&.posting')"
+.br
+.ti -1c
+.RI "tuple \fBLOGGER5\fP = logging\&.getLogger('kaco2pv\&.inverter')"
+.br
+.ti -1c
+.RI "tuple \fBLOGGER6\fP = logging\&.getLogger('kaco2pv\&.raw')"
+.br
+.ti -1c
+.RI "tuple \fBpvdata\fP"
+.br
+.ti -1c
+.RI "tuple \fBformatter\fP = logging\&.Formatter('%(message)s')"
+.br
+.ti -1c
+.RI "string \fBPVS_DEVICE\fP = '/dev/ttyUSB0'"
+.br
+.ti -1c
+.RI "float \fBPVS_MIN_PVP\fP = 7\&.5"
+.br
+.ti -1c
+.RI "float \fBPVS_MAX_PVP\fP = 6000\&.0"
+.br
+.ti -1c
+.RI "string \fBPVO_HOST\fP = 'pvoutput\&.org'"
+.br
+.ti -1c
+.RI "string \fBPVO_STATUS_URI\fP = '/service/r2/addstatus\&.jsp'"
+.br
+.ti -1c
+.RI "string \fBPVO_OUTPUT_URI\fP = '/service/r2/addoutput\&.jsp'"
+.br
+.ti -1c
+.RI "string \fBPVO_KEY\fP = '7ed8a297d387d3887dbd8059c5d8544382a4a12b'"
+.br
+.ti -1c
+.RI "string \fBPVO_SYSTEM_ID\fP = '24657'"
+.br
+.ti -1c
+.RI "int \fBPVO_STATUS_INTERVAL\fP = 5"
+.br
+.ti -1c
+.RI "int \fBSAMPLE_TIME\fP = 10"
+.br
+.ti -1c
+.RI "int \fBPV_DAILY_UPLOAD_TIME_HOUR\fP = 23"
+.br
+.ti -1c
+.RI "int \fBPV_DAILY_UPLOAD_TIME_MIN\fP = 45"
+.br
+.ti -1c
+.RI "tuple \fBTIME_NOW\fP = datetime\&.now()"
+.br
+.ti -1c
+.RI "tuple \fBPV_DAILY_UPLOAD_TIME\fP"
+.br
+.ti -1c
+.RI "\fBLOCAL_ONLY_TESTING\fP = False"
+.br
+.ti -1c
+.RI "float \fB_totalUse\fP = 0\&.0"
+.br
+.ti -1c
+.RI "float \fBtotalGen\fP = 0\&.0"
+.br
+.ti -1c
+.RI "float \fBtotalAmps\fP = 0\&.0"
+.br
+.ti -1c
+.RI "float \fBtotalVolts\fP = 0\&.0"
+.br
+.ti -1c
+.RI "int \fBtotalReadings\fP = 0"
+.br
+.ti -1c
+.RI "\fBlastStatus\fP = datetime\&.min"
+.br
+.ti -1c
+.RI "float \fBdailyUse\fP = 0\&.0"
+.br
+.ti -1c
+.RI "float \fBdailyGen\fP = 0\&.0"
+.br
+.ti -1c
+.RI "float \fBdailyEnergy\fP = 0\&.0"
+.br
+.ti -1c
+.RI "int \fBminTemp\fP = 100"
+.br
+.ti -1c
+.RI "int \fBmaxTemp\fP = -100"
+.br
+.ti -1c
+.RI "int \fBdailyReadings\fP = 0"
+.br
+.ti -1c
+.RI "\fBlastOutput\fP = datetime\&.min"
+.br
+.ti -1c
+.RI "float \fBpeakGen\fP = 0\&.0"
+.br
+.ti -1c
+.RI "tuple \fBpeakTime\fP = datetime\&.now()"
+.br
+.ti -1c
+.RI "int \fBsunriseHour\fP = 9"
+.br
+.ti -1c
+.RI "\fBfullDaysReadings\fP = False"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "def kaco2pvo\&.addReading ( newPowerReading)"
+
+.PP
+.nf
+Add a power reading 
+.fi
+.PP
+ 
+.PP
+Definition at line 310 of file kaco2pvo\&.py\&.
+.SS "def kaco2pvo\&.num ( stringToConvert)"
+
+.PP
+.nf
+returns an int or float from string 
+.fi
+.PP
+ 
+.PP
+Definition at line 179 of file kaco2pvo\&.py\&.
+.SS "def kaco2pvo\&.post ( uri,  params)"
+
+.PP
+.nf
+Performs posting to pvoutput.org 
+.fi
+.PP
+ 
+.PP
+Definition at line 238 of file kaco2pvo\&.py\&.
+.SS "def kaco2pvo\&.postPVoutput ( pvoDateOfOutput,  pvoGenerated,  pvoExported,  pvoPeakPower,  pvoPeakTime,  pvoCondition,  pvoMinTemp,  pvoMaxTemp,  pvoImportPeak,  pvoImportOffPeak,  pvoImportShoulder,  pvoImportHighShoulder,  pvoConsumption,  pvoComment)"
+
+.PP
+.nf
+Create string and pass it to post function 
+.fi
+.PP
+ 
+.PP
+Definition at line 290 of file kaco2pvo\&.py\&.
+.SS "def kaco2pvo\&.postPVstatus ( pvsTimeOfReading,  pvsEnergyGen,  pvsPowerGen,  pvsEnergyUse,  pvsPowerUse,  pvsTemp,  pvsVolts)"
+
+.PP
+.nf
+Create string and pass it to status posting 
+.fi
+.PP
+ 
+.PP
+Definition at line 266 of file kaco2pvo\&.py\&.
+.SS "def kaco2pvo\&.processReading ( readingToProcess)"
+
+.PP
+.nf
+Take string and process into component parts of reading 
+.fi
+.PP
+ 
+.PP
+Definition at line 387 of file kaco2pvo\&.py\&.
+.SH "Variable Documentation"
+.PP 
+.SS "float kaco2pvo\&._totalUse = 0\&.0"
+
+.PP
+Definition at line 157 of file kaco2pvo\&.py\&.
+.SS "tuple kaco2pvo\&.CONSOLE = logging\&.StreamHandler()"
+
+.PP
+Definition at line 73 of file kaco2pvo\&.py\&.
+.SS "float kaco2pvo\&.dailyEnergy = 0\&.0"
+
+.PP
+Definition at line 166 of file kaco2pvo\&.py\&.
+.SS "float kaco2pvo\&.dailyGen = 0\&.0"
+
+.PP
+Definition at line 165 of file kaco2pvo\&.py\&.
+.SS "int kaco2pvo\&.dailyReadings = 0"
+
+.PP
+Definition at line 169 of file kaco2pvo\&.py\&.
+.SS "float kaco2pvo\&.dailyUse = 0\&.0"
+
+.PP
+Definition at line 164 of file kaco2pvo\&.py\&.
+.SS "string kaco2pvo\&.datefmt = '%m-%d %H:%M'"
+
+.PP
+Definition at line 69 of file kaco2pvo\&.py\&.
+.SS "string kaco2pvo\&.filemode = 'w'"
+
+.PP
+Definition at line 71 of file kaco2pvo\&.py\&.
+.SS "kaco2pvo\&.filename = \fBLOG_FILENAME\fP,"
+
+.PP
+Definition at line 70 of file kaco2pvo\&.py\&.
+.SS "string kaco2pvo\&.format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'"
+
+.PP
+Definition at line 68 of file kaco2pvo\&.py\&.
+.SS "tuple kaco2pvo\&.FORMATTER = logging\&.Formatter('%(name)-12s: %(levelname)-8s %(message)s')"
+
+.PP
+Definition at line 76 of file kaco2pvo\&.py\&.
+.SS "tuple kaco2pvo\&.formatter = logging\&.Formatter('%(message)s')"
+
+.PP
+Definition at line 111 of file kaco2pvo\&.py\&.
+.SS "kaco2pvo\&.fullDaysReadings = False"
+
+.PP
+Definition at line 176 of file kaco2pvo\&.py\&.
+.SS "kaco2pvo\&.lastOutput = datetime\&.min"
+
+.PP
+Definition at line 170 of file kaco2pvo\&.py\&.
+.SS "kaco2pvo\&.lastStatus = datetime\&.min"
+
+.PP
+Definition at line 162 of file kaco2pvo\&.py\&.
+.SS "kaco2pvo\&.LOCAL_ONLY_TESTING = False"
+
+.PP
+Definition at line 155 of file kaco2pvo\&.py\&.
+.SS "string kaco2pvo\&.LOG_FILENAME = '/var/log/solar/kaco2pv\&.log'"
+
+.PP
+Definition at line 61 of file kaco2pvo\&.py\&.
+.SS "string kaco2pvo\&.LOG_READINGS_FILENAME = '/var/log/solar/kaco2pv_readings\&.log'"
+
+.PP
+Definition at line 62 of file kaco2pvo\&.py\&.
+.SS "tuple kaco2pvo\&.LOGGER1 = logging\&.getLogger('kaco2pv\&.general')"
+
+.PP
+Definition at line 89 of file kaco2pvo\&.py\&.
+.SS "tuple kaco2pvo\&.LOGGER2 = logging\&.getLogger('kaco2pv\&.dailyreadings')"
+
+.PP
+Definition at line 91 of file kaco2pvo\&.py\&.
+.SS "tuple kaco2pvo\&.LOGGER3 = logging\&.getLogger('kaco2pv\&.readings')"
+
+.PP
+Definition at line 93 of file kaco2pvo\&.py\&.
+.SS "tuple kaco2pvo\&.LOGGER4 = logging\&.getLogger('kaco2pv\&.posting')"
+
+.PP
+Definition at line 95 of file kaco2pvo\&.py\&.
+.SS "tuple kaco2pvo\&.LOGGER5 = logging\&.getLogger('kaco2pv\&.inverter')"
+
+.PP
+Definition at line 97 of file kaco2pvo\&.py\&.
+.SS "tuple kaco2pvo\&.LOGGER6 = logging\&.getLogger('kaco2pv\&.raw')"
+
+.PP
+Definition at line 102 of file kaco2pvo\&.py\&.
+.SS "int kaco2pvo\&.maxTemp = -100"
+
+.PP
+Definition at line 168 of file kaco2pvo\&.py\&.
+.SS "int kaco2pvo\&.minTemp = 100"
+
+.PP
+Definition at line 167 of file kaco2pvo\&.py\&.
+.SS "float kaco2pvo\&.peakGen = 0\&.0"
+
+.PP
+Definition at line 172 of file kaco2pvo\&.py\&.
+.SS "tuple kaco2pvo\&.peakTime = datetime\&.now()"
+
+.PP
+Definition at line 173 of file kaco2pvo\&.py\&.
+.SS "tuple kaco2pvo\&.PV_DAILY_UPLOAD_TIME"
+\fBInitial value:\fP
+.PP
+.nf
+1 = TIME_NOW\&.replace(hour=PV_DAILY_UPLOAD_TIME_HOUR,
+2                                         minute=PV_DAILY_UPLOAD_TIME_MIN,
+3                                         second=0, microsecond=0)
+.fi
+.PP
+Definition at line 150 of file kaco2pvo\&.py\&.
+.SS "int kaco2pvo\&.PV_DAILY_UPLOAD_TIME_HOUR = 23"
+
+.PP
+Definition at line 145 of file kaco2pvo\&.py\&.
+.SS "int kaco2pvo\&.PV_DAILY_UPLOAD_TIME_MIN = 45"
+
+.PP
+Definition at line 146 of file kaco2pvo\&.py\&.
+.SS "tuple kaco2pvo\&.pvdata"
+\fBInitial value:\fP
+.PP
+.nf
+1 = logging\&.handlers\&.TimedRotatingFileHandler(LOG_READINGS_FILENAME,
+2                                                    when='midnight',
+3                                                    interval=1,
+4                                                    backupCount=14,
+5                                                    encoding=None,
+6                                                    delay=False,
+7                                                    utc=False)
+.fi
+.PP
+Definition at line 103 of file kaco2pvo\&.py\&.
+.SS "string kaco2pvo\&.PVO_HOST = 'pvoutput\&.org'"
+
+.PP
+Definition at line 132 of file kaco2pvo\&.py\&.
+.SS "string kaco2pvo\&.PVO_KEY = '7ed8a297d387d3887dbd8059c5d8544382a4a12b'"
+
+.PP
+Definition at line 137 of file kaco2pvo\&.py\&.
+.SS "string kaco2pvo\&.PVO_OUTPUT_URI = '/service/r2/addoutput\&.jsp'"
+
+.PP
+Definition at line 134 of file kaco2pvo\&.py\&.
+.SS "int kaco2pvo\&.PVO_STATUS_INTERVAL = 5"
+
+.PP
+Definition at line 141 of file kaco2pvo\&.py\&.
+.SS "string kaco2pvo\&.PVO_STATUS_URI = '/service/r2/addstatus\&.jsp'"
+
+.PP
+Definition at line 133 of file kaco2pvo\&.py\&.
+.SS "string kaco2pvo\&.PVO_SYSTEM_ID = '24657'"
+
+.PP
+Definition at line 139 of file kaco2pvo\&.py\&.
+.SS "string kaco2pvo\&.PVS_DEVICE = '/dev/ttyUSB0'"
+
+.PP
+Definition at line 126 of file kaco2pvo\&.py\&.
+.SS "float kaco2pvo\&.PVS_MAX_PVP = 6000\&.0"
+
+.PP
+Definition at line 130 of file kaco2pvo\&.py\&.
+.SS "float kaco2pvo\&.PVS_MIN_PVP = 7\&.5"
+
+.PP
+Definition at line 128 of file kaco2pvo\&.py\&.
+.SS "int kaco2pvo\&.SAMPLE_TIME = 10"
+
+.PP
+Definition at line 143 of file kaco2pvo\&.py\&.
+.SS "int kaco2pvo\&.sunriseHour = 9"
+
+.PP
+Definition at line 175 of file kaco2pvo\&.py\&.
+.SS "tuple kaco2pvo\&.TIME_NOW = datetime\&.now()"
+
+.PP
+Definition at line 149 of file kaco2pvo\&.py\&.
+.SS "float kaco2pvo\&.totalAmps = 0\&.0"
+
+.PP
+Definition at line 159 of file kaco2pvo\&.py\&.
+.SS "float kaco2pvo\&.totalGen = 0\&.0"
+
+.PP
+Definition at line 158 of file kaco2pvo\&.py\&.
+.SS "int kaco2pvo\&.totalReadings = 0"
+
+.PP
+Definition at line 161 of file kaco2pvo\&.py\&.
+.SS "float kaco2pvo\&.totalVolts = 0\&.0"
+
+.PP
+Definition at line 160 of file kaco2pvo\&.py\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for kaco2pv from the source code\&.

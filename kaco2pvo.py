@@ -1,6 +1,9 @@
 #!/usr/bin/env python
-""" Process to take serial data from Kaco inverter and upload
- to pvoutput.org """
+""" @package docstring
+Documentation for this module
+    
+Process to take serial data from Kaco inverter and upload
+to pvoutput.org
 # Upload from Kaco Powador serial output to pvoutput.org live feed
 #
 #
@@ -40,6 +43,8 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
+"""
+
 
 from datetime import datetime
 import serial
@@ -217,6 +222,7 @@ class powerReading:
                  generatorCurrent,
                  generatorPower, lineVoltage, lineCurrentFeedIn,
                  powerFeedIn, unitTemperature):
+        """ class initialiser """
         self._timeOfReading = timeOfReading
         self._dailyRunTime = dailyRunTime
         self._operatingState = operatingState

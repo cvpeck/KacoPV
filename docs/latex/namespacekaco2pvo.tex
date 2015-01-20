@@ -1,0 +1,571 @@
+\hypertarget{namespacekaco2pvo}{}\section{kaco2pvo Namespace Reference}
+\label{namespacekaco2pvo}\index{kaco2pvo@{kaco2pvo}}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classkaco2pvo_1_1power_reading}{power\+Reading}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespacekaco2pvo_ad19eafdfa1ef0861d4b6fc39db613d75}{num} (string\+To\+Convert)
+\item 
+def \hyperlink{namespacekaco2pvo_a9db95957b3864a612d3081599c2f44dc}{post} (uri, params)
+\item 
+def \hyperlink{namespacekaco2pvo_a87f1220a1e7465a5c1ec0ce45bdbb65c}{post\+P\+Vstatus} (pvs\+Time\+Of\+Reading, pvs\+Energy\+Gen, pvs\+Power\+Gen, pvs\+Energy\+Use, pvs\+Power\+Use, pvs\+Temp, pvs\+Volts)
+\item 
+def \hyperlink{namespacekaco2pvo_a7a6ad473616ad2d5a48336378e93ae1e}{post\+P\+Voutput} (pvo\+Date\+Of\+Output, pvo\+Generated, pvo\+Exported, pvo\+Peak\+Power, pvo\+Peak\+Time, pvo\+Condition, pvo\+Min\+Temp, pvo\+Max\+Temp, pvo\+Import\+Peak, pvo\+Import\+Off\+Peak, pvo\+Import\+Shoulder, pvo\+Import\+High\+Shoulder, pvo\+Consumption, pvo\+Comment)
+\item 
+def \hyperlink{namespacekaco2pvo_a7bfbcaef67b7f421a4963d361a3c5b70}{add\+Reading} (new\+Power\+Reading)
+\item 
+def \hyperlink{namespacekaco2pvo_a181001898db5bbb63325ef1d1aceb723}{process\+Reading} (reading\+To\+Process)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+string \hyperlink{namespacekaco2pvo_ae7051b1e33f9f50f3ebaa0d7599508b0}{L\+O\+G\+\_\+\+F\+I\+L\+E\+N\+A\+M\+E} = \textquotesingle{}/var/log/solar/kaco2pv.\+log\textquotesingle{}
+\item 
+string \hyperlink{namespacekaco2pvo_adc1024bae951cf0139b81e6ea62a9416}{L\+O\+G\+\_\+\+R\+E\+A\+D\+I\+N\+G\+S\+\_\+\+F\+I\+L\+E\+N\+A\+M\+E} = \textquotesingle{}/var/log/solar/kaco2pv\+\_\+readings.\+log\textquotesingle{}
+\item 
+string \hyperlink{namespacekaco2pvo_a8e0cef267ad3a400b70c9411a08cec1a}{format} = \textquotesingle{}\%(asctime)s \%(name)-\/12s \%(levelname)-\/8s \%(message)s\textquotesingle{}
+\item 
+string \hyperlink{namespacekaco2pvo_ace25c8f7b6c649306e146a503053eab4}{datefmt} = \textquotesingle{}\%m-\/\%d \%H\+:\%M\textquotesingle{}
+\item 
+\hyperlink{namespacekaco2pvo_abdd68648081e46aedb256202cc9744c1}{filename} = \hyperlink{namespacekaco2pvo_ae7051b1e33f9f50f3ebaa0d7599508b0}{L\+O\+G\+\_\+\+F\+I\+L\+E\+N\+A\+M\+E},
+\item 
+string \hyperlink{namespacekaco2pvo_ac3aca84da77e325966b4a79a15d4f0bd}{filemode} = \textquotesingle{}w\textquotesingle{}
+\item 
+tuple \hyperlink{namespacekaco2pvo_adf356df59afe5b3a345850ed820ef806}{C\+O\+N\+S\+O\+L\+E} = logging.\+Stream\+Handler()
+\item 
+tuple \hyperlink{namespacekaco2pvo_ae338ae856d783c3f2f8636a2c3fb397f}{F\+O\+R\+M\+A\+T\+T\+E\+R} = logging.\+Formatter(\textquotesingle{}\%(name)-\/12s\+: \%(levelname)-\/8s \%(message)s\textquotesingle{})
+\item 
+tuple \hyperlink{namespacekaco2pvo_acc657a067d1fb3fab2e8a4215bc2fbb0}{L\+O\+G\+G\+E\+R1} = logging.\+get\+Logger(\textquotesingle{}kaco2pv.\+general\textquotesingle{})
+\item 
+tuple \hyperlink{namespacekaco2pvo_a582f5f9563f2851ddad564ea4dfc173e}{L\+O\+G\+G\+E\+R2} = logging.\+get\+Logger(\textquotesingle{}kaco2pv.\+dailyreadings\textquotesingle{})
+\item 
+tuple \hyperlink{namespacekaco2pvo_ae935d61a481e99111efe2ed1db9bd027}{L\+O\+G\+G\+E\+R3} = logging.\+get\+Logger(\textquotesingle{}kaco2pv.\+readings\textquotesingle{})
+\item 
+tuple \hyperlink{namespacekaco2pvo_a4fa57148f3e1066de4c3ed0a7d5e9c23}{L\+O\+G\+G\+E\+R4} = logging.\+get\+Logger(\textquotesingle{}kaco2pv.\+posting\textquotesingle{})
+\item 
+tuple \hyperlink{namespacekaco2pvo_aa8eefb9bf8bad3161b1b878bd55236c5}{L\+O\+G\+G\+E\+R5} = logging.\+get\+Logger(\textquotesingle{}kaco2pv.\+inverter\textquotesingle{})
+\item 
+tuple \hyperlink{namespacekaco2pvo_ab56cb6cd6e8dc59acbbf03cb09c7a522}{L\+O\+G\+G\+E\+R6} = logging.\+get\+Logger(\textquotesingle{}kaco2pv.\+raw\textquotesingle{})
+\item 
+tuple \hyperlink{namespacekaco2pvo_ae4ae0e0b0d3db2f9db79cda692b34f21}{pvdata}
+\item 
+tuple \hyperlink{namespacekaco2pvo_acc7f29a549e72ad45ff6e4e2d1410219}{formatter} = logging.\+Formatter(\textquotesingle{}\%(message)s\textquotesingle{})
+\item 
+string \hyperlink{namespacekaco2pvo_ac673eb9e5b727f759eeea8edb990c81c}{P\+V\+S\+\_\+\+D\+E\+V\+I\+C\+E} = \char`\"{}/dev/tty\+U\+S\+B0\char`\"{}
+\item 
+float \hyperlink{namespacekaco2pvo_a254420e2cbb7034d7e494c8176a724ad}{P\+V\+S\+\_\+\+M\+I\+N\+\_\+\+P\+V\+P} = 7.\+5
+\item 
+float \hyperlink{namespacekaco2pvo_aecad1a1f015e701294ae4e083bfade40}{P\+V\+S\+\_\+\+M\+A\+X\+\_\+\+P\+V\+P} = 6000.\+0
+\item 
+string \hyperlink{namespacekaco2pvo_a9e9b5ee47557bde93b45c986ada366c4}{P\+V\+O\+\_\+\+H\+O\+S\+T} = \char`\"{}pvoutput.\+org\char`\"{}
+\item 
+string \hyperlink{namespacekaco2pvo_a1c058de251e3097097b3ca46627e9572}{P\+V\+O\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+U\+R\+I} = \char`\"{}/service/r2/addstatus.\+jsp\char`\"{}
+\item 
+string \hyperlink{namespacekaco2pvo_aa9eb4b879b1b7bc4d18c426a30003d8a}{P\+V\+O\+\_\+\+O\+U\+T\+P\+U\+T\+\_\+\+U\+R\+I} = \char`\"{}/service/r2/addoutput.\+jsp\char`\"{}
+\item 
+string \hyperlink{namespacekaco2pvo_ad88154b2fb00beb1cfbfae5585af5ac9}{P\+V\+O\+\_\+\+K\+E\+Y} = \char`\"{}7ed8a297d387d3887dbd8059c5d8544382a4a12b\char`\"{}
+\item 
+string \hyperlink{namespacekaco2pvo_aa43938367200428da66c8ef5a5997de1}{P\+V\+O\+\_\+\+S\+Y\+S\+T\+E\+M\+\_\+\+I\+D} = \char`\"{}24657\char`\"{}
+\item 
+int \hyperlink{namespacekaco2pvo_af394104e75126491b592392ef4a496c3}{P\+V\+O\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+I\+N\+T\+E\+R\+V\+A\+L} = 5
+\item 
+int \hyperlink{namespacekaco2pvo_aa1171dcdb6218f78cd24095e33df03b0}{S\+A\+M\+P\+L\+E\+\_\+\+T\+I\+M\+E} = 10
+\item 
+int \hyperlink{namespacekaco2pvo_a8ee8c3a356a6e5070403190c5a5c111c}{P\+V\+\_\+\+D\+A\+I\+L\+Y\+\_\+\+U\+P\+L\+O\+A\+D\+\_\+\+T\+I\+M\+E\+\_\+\+H\+O\+U\+R} = 23
+\item 
+int \hyperlink{namespacekaco2pvo_adfa392fe355836276e546d4d6d4eca52}{P\+V\+\_\+\+D\+A\+I\+L\+Y\+\_\+\+U\+P\+L\+O\+A\+D\+\_\+\+T\+I\+M\+E\+\_\+\+M\+I\+N} = 45
+\item 
+tuple \hyperlink{namespacekaco2pvo_ad285210c5c2a47f71ea80963c7ec5659}{T\+I\+M\+E\+\_\+\+N\+O\+W} = datetime.\+now()
+\item 
+tuple \hyperlink{namespacekaco2pvo_acdd697a7c8e4d2d9d64dc216df3eca02}{P\+V\+\_\+\+D\+A\+I\+L\+Y\+\_\+\+U\+P\+L\+O\+A\+D\+\_\+\+T\+I\+M\+E}
+\item 
+\hyperlink{namespacekaco2pvo_abc161ff89f5e21fa7d1b55b5c7d63fcf}{L\+O\+C\+A\+L\+\_\+\+O\+N\+L\+Y\+\_\+\+T\+E\+S\+T\+I\+N\+G} = False
+\item 
+float \hyperlink{namespacekaco2pvo_a399c82a403a1875f6361db0c965eb28b}{\+\_\+total\+Use} = 0.\+0
+\item 
+float \hyperlink{namespacekaco2pvo_a6a9f776486bf396d4fc1fe7e58b49504}{total\+Gen} = 0.\+0
+\item 
+float \hyperlink{namespacekaco2pvo_a0896e4e9c1e2071ff9dad79ca4c1ac90}{total\+Amps} = 0.\+0
+\item 
+float \hyperlink{namespacekaco2pvo_a494df69766f24f66f1cc08bd7c12391e}{total\+Volts} = 0.\+0
+\item 
+int \hyperlink{namespacekaco2pvo_ae4761990f981a3df61f7d33feda1bd7d}{total\+Readings} = 0
+\item 
+\hyperlink{namespacekaco2pvo_a7c3c6c8c268272c74c596e1ab4e62db8}{last\+Status} = datetime.\+min
+\item 
+float \hyperlink{namespacekaco2pvo_a7067b502b347ed0976ff588659da54f3}{daily\+Use} = 0.\+0
+\item 
+float \hyperlink{namespacekaco2pvo_a0869eb37a51cb27c283bbd7399e48751}{daily\+Gen} = 0.\+0
+\item 
+float \hyperlink{namespacekaco2pvo_adc1dd81395978d32a695d89283409598}{daily\+Energy} = 0.\+0
+\item 
+int \hyperlink{namespacekaco2pvo_affe215a515246118e429d007acb723a8}{min\+Temp} = 100
+\item 
+int \hyperlink{namespacekaco2pvo_afc870a268fa08b616db16d50b19bbd90}{max\+Temp} = -\/100
+\item 
+int \hyperlink{namespacekaco2pvo_ad372d037c3416924e35d0d8b40afa572}{daily\+Readings} = 0
+\item 
+\hyperlink{namespacekaco2pvo_a1df621e1e0c27a48983d7e0b7c6beab3}{last\+Output} = datetime.\+min
+\item 
+float \hyperlink{namespacekaco2pvo_a0cce2912748ba57bbc1609834c0acbc1}{peak\+Gen} = 0.\+0
+\item 
+tuple \hyperlink{namespacekaco2pvo_aee6595766d5a3ac626e685c7dbfa4ed8}{peak\+Time} = datetime.\+now()
+\item 
+int \hyperlink{namespacekaco2pvo_adbaf401038663576c5820bae830b8c66}{sunrise\+Hour} = 9
+\item 
+\hyperlink{namespacekaco2pvo_aae937eda0631ecf6afcfc425a4dd234d}{full\+Days\+Readings} = False
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{namespacekaco2pvo_a7bfbcaef67b7f421a4963d361a3c5b70}{}\index{kaco2pvo@{kaco2pvo}!add\+Reading@{add\+Reading}}
+\index{add\+Reading@{add\+Reading}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{add\+Reading}]{\setlength{\rightskip}{0pt plus 5cm}def kaco2pvo.\+add\+Reading (
+\begin{DoxyParamCaption}
+\item[{}]{new\+Power\+Reading}
+\end{DoxyParamCaption}
+)}\label{namespacekaco2pvo_a7bfbcaef67b7f421a4963d361a3c5b70}
+\begin{DoxyVerb}Add a power reading \end{DoxyVerb}
+ 
+
+Definition at line 310 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_ad19eafdfa1ef0861d4b6fc39db613d75}{}\index{kaco2pvo@{kaco2pvo}!num@{num}}
+\index{num@{num}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{num}]{\setlength{\rightskip}{0pt plus 5cm}def kaco2pvo.\+num (
+\begin{DoxyParamCaption}
+\item[{}]{string\+To\+Convert}
+\end{DoxyParamCaption}
+)}\label{namespacekaco2pvo_ad19eafdfa1ef0861d4b6fc39db613d75}
+\begin{DoxyVerb}returns an int or float from string \end{DoxyVerb}
+ 
+
+Definition at line 179 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_a9db95957b3864a612d3081599c2f44dc}{}\index{kaco2pvo@{kaco2pvo}!post@{post}}
+\index{post@{post}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{post}]{\setlength{\rightskip}{0pt plus 5cm}def kaco2pvo.\+post (
+\begin{DoxyParamCaption}
+\item[{}]{uri, }
+\item[{}]{params}
+\end{DoxyParamCaption}
+)}\label{namespacekaco2pvo_a9db95957b3864a612d3081599c2f44dc}
+\begin{DoxyVerb}Performs posting to pvoutput.org \end{DoxyVerb}
+ 
+
+Definition at line 238 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_a7a6ad473616ad2d5a48336378e93ae1e}{}\index{kaco2pvo@{kaco2pvo}!post\+P\+Voutput@{post\+P\+Voutput}}
+\index{post\+P\+Voutput@{post\+P\+Voutput}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{post\+P\+Voutput}]{\setlength{\rightskip}{0pt plus 5cm}def kaco2pvo.\+post\+P\+Voutput (
+\begin{DoxyParamCaption}
+\item[{}]{pvo\+Date\+Of\+Output, }
+\item[{}]{pvo\+Generated, }
+\item[{}]{pvo\+Exported, }
+\item[{}]{pvo\+Peak\+Power, }
+\item[{}]{pvo\+Peak\+Time, }
+\item[{}]{pvo\+Condition, }
+\item[{}]{pvo\+Min\+Temp, }
+\item[{}]{pvo\+Max\+Temp, }
+\item[{}]{pvo\+Import\+Peak, }
+\item[{}]{pvo\+Import\+Off\+Peak, }
+\item[{}]{pvo\+Import\+Shoulder, }
+\item[{}]{pvo\+Import\+High\+Shoulder, }
+\item[{}]{pvo\+Consumption, }
+\item[{}]{pvo\+Comment}
+\end{DoxyParamCaption}
+)}\label{namespacekaco2pvo_a7a6ad473616ad2d5a48336378e93ae1e}
+\begin{DoxyVerb}Create string and pass it to post function \end{DoxyVerb}
+ 
+
+Definition at line 290 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_a87f1220a1e7465a5c1ec0ce45bdbb65c}{}\index{kaco2pvo@{kaco2pvo}!post\+P\+Vstatus@{post\+P\+Vstatus}}
+\index{post\+P\+Vstatus@{post\+P\+Vstatus}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{post\+P\+Vstatus}]{\setlength{\rightskip}{0pt plus 5cm}def kaco2pvo.\+post\+P\+Vstatus (
+\begin{DoxyParamCaption}
+\item[{}]{pvs\+Time\+Of\+Reading, }
+\item[{}]{pvs\+Energy\+Gen, }
+\item[{}]{pvs\+Power\+Gen, }
+\item[{}]{pvs\+Energy\+Use, }
+\item[{}]{pvs\+Power\+Use, }
+\item[{}]{pvs\+Temp, }
+\item[{}]{pvs\+Volts}
+\end{DoxyParamCaption}
+)}\label{namespacekaco2pvo_a87f1220a1e7465a5c1ec0ce45bdbb65c}
+\begin{DoxyVerb}Create string and pass it to status posting \end{DoxyVerb}
+ 
+
+Definition at line 266 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_a181001898db5bbb63325ef1d1aceb723}{}\index{kaco2pvo@{kaco2pvo}!process\+Reading@{process\+Reading}}
+\index{process\+Reading@{process\+Reading}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{process\+Reading}]{\setlength{\rightskip}{0pt plus 5cm}def kaco2pvo.\+process\+Reading (
+\begin{DoxyParamCaption}
+\item[{}]{reading\+To\+Process}
+\end{DoxyParamCaption}
+)}\label{namespacekaco2pvo_a181001898db5bbb63325ef1d1aceb723}
+\begin{DoxyVerb}Take string and process into component parts of reading \end{DoxyVerb}
+ 
+
+Definition at line 387 of file kaco2pvo.\+py.
+
+
+
+\subsection{Variable Documentation}
+\hypertarget{namespacekaco2pvo_a399c82a403a1875f6361db0c965eb28b}{}\index{kaco2pvo@{kaco2pvo}!\+\_\+total\+Use@{\+\_\+total\+Use}}
+\index{\+\_\+total\+Use@{\+\_\+total\+Use}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{\+\_\+total\+Use}]{\setlength{\rightskip}{0pt plus 5cm}float kaco2pvo.\+\_\+total\+Use = 0.\+0}\label{namespacekaco2pvo_a399c82a403a1875f6361db0c965eb28b}
+
+
+Definition at line 157 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_adf356df59afe5b3a345850ed820ef806}{}\index{kaco2pvo@{kaco2pvo}!C\+O\+N\+S\+O\+L\+E@{C\+O\+N\+S\+O\+L\+E}}
+\index{C\+O\+N\+S\+O\+L\+E@{C\+O\+N\+S\+O\+L\+E}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{C\+O\+N\+S\+O\+L\+E}]{\setlength{\rightskip}{0pt plus 5cm}tuple kaco2pvo.\+C\+O\+N\+S\+O\+L\+E = logging.\+Stream\+Handler()}\label{namespacekaco2pvo_adf356df59afe5b3a345850ed820ef806}
+
+
+Definition at line 73 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_adc1dd81395978d32a695d89283409598}{}\index{kaco2pvo@{kaco2pvo}!daily\+Energy@{daily\+Energy}}
+\index{daily\+Energy@{daily\+Energy}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{daily\+Energy}]{\setlength{\rightskip}{0pt plus 5cm}float kaco2pvo.\+daily\+Energy = 0.\+0}\label{namespacekaco2pvo_adc1dd81395978d32a695d89283409598}
+
+
+Definition at line 166 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_a0869eb37a51cb27c283bbd7399e48751}{}\index{kaco2pvo@{kaco2pvo}!daily\+Gen@{daily\+Gen}}
+\index{daily\+Gen@{daily\+Gen}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{daily\+Gen}]{\setlength{\rightskip}{0pt plus 5cm}float kaco2pvo.\+daily\+Gen = 0.\+0}\label{namespacekaco2pvo_a0869eb37a51cb27c283bbd7399e48751}
+
+
+Definition at line 165 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_ad372d037c3416924e35d0d8b40afa572}{}\index{kaco2pvo@{kaco2pvo}!daily\+Readings@{daily\+Readings}}
+\index{daily\+Readings@{daily\+Readings}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{daily\+Readings}]{\setlength{\rightskip}{0pt plus 5cm}int kaco2pvo.\+daily\+Readings = 0}\label{namespacekaco2pvo_ad372d037c3416924e35d0d8b40afa572}
+
+
+Definition at line 169 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_a7067b502b347ed0976ff588659da54f3}{}\index{kaco2pvo@{kaco2pvo}!daily\+Use@{daily\+Use}}
+\index{daily\+Use@{daily\+Use}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{daily\+Use}]{\setlength{\rightskip}{0pt plus 5cm}float kaco2pvo.\+daily\+Use = 0.\+0}\label{namespacekaco2pvo_a7067b502b347ed0976ff588659da54f3}
+
+
+Definition at line 164 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_ace25c8f7b6c649306e146a503053eab4}{}\index{kaco2pvo@{kaco2pvo}!datefmt@{datefmt}}
+\index{datefmt@{datefmt}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{datefmt}]{\setlength{\rightskip}{0pt plus 5cm}string kaco2pvo.\+datefmt = \textquotesingle{}\%m-\/\%d \%H\+:\%M\textquotesingle{}}\label{namespacekaco2pvo_ace25c8f7b6c649306e146a503053eab4}
+
+
+Definition at line 69 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_ac3aca84da77e325966b4a79a15d4f0bd}{}\index{kaco2pvo@{kaco2pvo}!filemode@{filemode}}
+\index{filemode@{filemode}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{filemode}]{\setlength{\rightskip}{0pt plus 5cm}string kaco2pvo.\+filemode = \textquotesingle{}w\textquotesingle{}}\label{namespacekaco2pvo_ac3aca84da77e325966b4a79a15d4f0bd}
+
+
+Definition at line 71 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_abdd68648081e46aedb256202cc9744c1}{}\index{kaco2pvo@{kaco2pvo}!filename@{filename}}
+\index{filename@{filename}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{filename}]{\setlength{\rightskip}{0pt plus 5cm}kaco2pvo.\+filename = {\bf L\+O\+G\+\_\+\+F\+I\+L\+E\+N\+A\+M\+E},}\label{namespacekaco2pvo_abdd68648081e46aedb256202cc9744c1}
+
+
+Definition at line 70 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_a8e0cef267ad3a400b70c9411a08cec1a}{}\index{kaco2pvo@{kaco2pvo}!format@{format}}
+\index{format@{format}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{format}]{\setlength{\rightskip}{0pt plus 5cm}string kaco2pvo.\+format = \textquotesingle{}\%(asctime)s \%(name)-\/12s \%(levelname)-\/8s \%(message)s\textquotesingle{}}\label{namespacekaco2pvo_a8e0cef267ad3a400b70c9411a08cec1a}
+
+
+Definition at line 68 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_ae338ae856d783c3f2f8636a2c3fb397f}{}\index{kaco2pvo@{kaco2pvo}!F\+O\+R\+M\+A\+T\+T\+E\+R@{F\+O\+R\+M\+A\+T\+T\+E\+R}}
+\index{F\+O\+R\+M\+A\+T\+T\+E\+R@{F\+O\+R\+M\+A\+T\+T\+E\+R}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{F\+O\+R\+M\+A\+T\+T\+E\+R}]{\setlength{\rightskip}{0pt plus 5cm}tuple kaco2pvo.\+F\+O\+R\+M\+A\+T\+T\+E\+R = logging.\+Formatter(\textquotesingle{}\%(name)-\/12s\+: \%(levelname)-\/8s \%(message)s\textquotesingle{})}\label{namespacekaco2pvo_ae338ae856d783c3f2f8636a2c3fb397f}
+
+
+Definition at line 76 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_acc7f29a549e72ad45ff6e4e2d1410219}{}\index{kaco2pvo@{kaco2pvo}!formatter@{formatter}}
+\index{formatter@{formatter}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{formatter}]{\setlength{\rightskip}{0pt plus 5cm}tuple kaco2pvo.\+formatter = logging.\+Formatter(\textquotesingle{}\%(message)s\textquotesingle{})}\label{namespacekaco2pvo_acc7f29a549e72ad45ff6e4e2d1410219}
+
+
+Definition at line 111 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_aae937eda0631ecf6afcfc425a4dd234d}{}\index{kaco2pvo@{kaco2pvo}!full\+Days\+Readings@{full\+Days\+Readings}}
+\index{full\+Days\+Readings@{full\+Days\+Readings}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{full\+Days\+Readings}]{\setlength{\rightskip}{0pt plus 5cm}kaco2pvo.\+full\+Days\+Readings = False}\label{namespacekaco2pvo_aae937eda0631ecf6afcfc425a4dd234d}
+
+
+Definition at line 176 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_a1df621e1e0c27a48983d7e0b7c6beab3}{}\index{kaco2pvo@{kaco2pvo}!last\+Output@{last\+Output}}
+\index{last\+Output@{last\+Output}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{last\+Output}]{\setlength{\rightskip}{0pt plus 5cm}kaco2pvo.\+last\+Output = datetime.\+min}\label{namespacekaco2pvo_a1df621e1e0c27a48983d7e0b7c6beab3}
+
+
+Definition at line 170 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_a7c3c6c8c268272c74c596e1ab4e62db8}{}\index{kaco2pvo@{kaco2pvo}!last\+Status@{last\+Status}}
+\index{last\+Status@{last\+Status}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{last\+Status}]{\setlength{\rightskip}{0pt plus 5cm}kaco2pvo.\+last\+Status = datetime.\+min}\label{namespacekaco2pvo_a7c3c6c8c268272c74c596e1ab4e62db8}
+
+
+Definition at line 162 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_abc161ff89f5e21fa7d1b55b5c7d63fcf}{}\index{kaco2pvo@{kaco2pvo}!L\+O\+C\+A\+L\+\_\+\+O\+N\+L\+Y\+\_\+\+T\+E\+S\+T\+I\+N\+G@{L\+O\+C\+A\+L\+\_\+\+O\+N\+L\+Y\+\_\+\+T\+E\+S\+T\+I\+N\+G}}
+\index{L\+O\+C\+A\+L\+\_\+\+O\+N\+L\+Y\+\_\+\+T\+E\+S\+T\+I\+N\+G@{L\+O\+C\+A\+L\+\_\+\+O\+N\+L\+Y\+\_\+\+T\+E\+S\+T\+I\+N\+G}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{L\+O\+C\+A\+L\+\_\+\+O\+N\+L\+Y\+\_\+\+T\+E\+S\+T\+I\+N\+G}]{\setlength{\rightskip}{0pt plus 5cm}kaco2pvo.\+L\+O\+C\+A\+L\+\_\+\+O\+N\+L\+Y\+\_\+\+T\+E\+S\+T\+I\+N\+G = False}\label{namespacekaco2pvo_abc161ff89f5e21fa7d1b55b5c7d63fcf}
+
+
+Definition at line 155 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_ae7051b1e33f9f50f3ebaa0d7599508b0}{}\index{kaco2pvo@{kaco2pvo}!L\+O\+G\+\_\+\+F\+I\+L\+E\+N\+A\+M\+E@{L\+O\+G\+\_\+\+F\+I\+L\+E\+N\+A\+M\+E}}
+\index{L\+O\+G\+\_\+\+F\+I\+L\+E\+N\+A\+M\+E@{L\+O\+G\+\_\+\+F\+I\+L\+E\+N\+A\+M\+E}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{L\+O\+G\+\_\+\+F\+I\+L\+E\+N\+A\+M\+E}]{\setlength{\rightskip}{0pt plus 5cm}string kaco2pvo.\+L\+O\+G\+\_\+\+F\+I\+L\+E\+N\+A\+M\+E = \textquotesingle{}/var/log/solar/kaco2pv.\+log\textquotesingle{}}\label{namespacekaco2pvo_ae7051b1e33f9f50f3ebaa0d7599508b0}
+
+
+Definition at line 61 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_adc1024bae951cf0139b81e6ea62a9416}{}\index{kaco2pvo@{kaco2pvo}!L\+O\+G\+\_\+\+R\+E\+A\+D\+I\+N\+G\+S\+\_\+\+F\+I\+L\+E\+N\+A\+M\+E@{L\+O\+G\+\_\+\+R\+E\+A\+D\+I\+N\+G\+S\+\_\+\+F\+I\+L\+E\+N\+A\+M\+E}}
+\index{L\+O\+G\+\_\+\+R\+E\+A\+D\+I\+N\+G\+S\+\_\+\+F\+I\+L\+E\+N\+A\+M\+E@{L\+O\+G\+\_\+\+R\+E\+A\+D\+I\+N\+G\+S\+\_\+\+F\+I\+L\+E\+N\+A\+M\+E}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{L\+O\+G\+\_\+\+R\+E\+A\+D\+I\+N\+G\+S\+\_\+\+F\+I\+L\+E\+N\+A\+M\+E}]{\setlength{\rightskip}{0pt plus 5cm}string kaco2pvo.\+L\+O\+G\+\_\+\+R\+E\+A\+D\+I\+N\+G\+S\+\_\+\+F\+I\+L\+E\+N\+A\+M\+E = \textquotesingle{}/var/log/solar/kaco2pv\+\_\+readings.\+log\textquotesingle{}}\label{namespacekaco2pvo_adc1024bae951cf0139b81e6ea62a9416}
+
+
+Definition at line 62 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_acc657a067d1fb3fab2e8a4215bc2fbb0}{}\index{kaco2pvo@{kaco2pvo}!L\+O\+G\+G\+E\+R1@{L\+O\+G\+G\+E\+R1}}
+\index{L\+O\+G\+G\+E\+R1@{L\+O\+G\+G\+E\+R1}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{L\+O\+G\+G\+E\+R1}]{\setlength{\rightskip}{0pt plus 5cm}tuple kaco2pvo.\+L\+O\+G\+G\+E\+R1 = logging.\+get\+Logger(\textquotesingle{}kaco2pv.\+general\textquotesingle{})}\label{namespacekaco2pvo_acc657a067d1fb3fab2e8a4215bc2fbb0}
+
+
+Definition at line 89 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_a582f5f9563f2851ddad564ea4dfc173e}{}\index{kaco2pvo@{kaco2pvo}!L\+O\+G\+G\+E\+R2@{L\+O\+G\+G\+E\+R2}}
+\index{L\+O\+G\+G\+E\+R2@{L\+O\+G\+G\+E\+R2}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{L\+O\+G\+G\+E\+R2}]{\setlength{\rightskip}{0pt plus 5cm}tuple kaco2pvo.\+L\+O\+G\+G\+E\+R2 = logging.\+get\+Logger(\textquotesingle{}kaco2pv.\+dailyreadings\textquotesingle{})}\label{namespacekaco2pvo_a582f5f9563f2851ddad564ea4dfc173e}
+
+
+Definition at line 91 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_ae935d61a481e99111efe2ed1db9bd027}{}\index{kaco2pvo@{kaco2pvo}!L\+O\+G\+G\+E\+R3@{L\+O\+G\+G\+E\+R3}}
+\index{L\+O\+G\+G\+E\+R3@{L\+O\+G\+G\+E\+R3}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{L\+O\+G\+G\+E\+R3}]{\setlength{\rightskip}{0pt plus 5cm}tuple kaco2pvo.\+L\+O\+G\+G\+E\+R3 = logging.\+get\+Logger(\textquotesingle{}kaco2pv.\+readings\textquotesingle{})}\label{namespacekaco2pvo_ae935d61a481e99111efe2ed1db9bd027}
+
+
+Definition at line 93 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_a4fa57148f3e1066de4c3ed0a7d5e9c23}{}\index{kaco2pvo@{kaco2pvo}!L\+O\+G\+G\+E\+R4@{L\+O\+G\+G\+E\+R4}}
+\index{L\+O\+G\+G\+E\+R4@{L\+O\+G\+G\+E\+R4}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{L\+O\+G\+G\+E\+R4}]{\setlength{\rightskip}{0pt plus 5cm}tuple kaco2pvo.\+L\+O\+G\+G\+E\+R4 = logging.\+get\+Logger(\textquotesingle{}kaco2pv.\+posting\textquotesingle{})}\label{namespacekaco2pvo_a4fa57148f3e1066de4c3ed0a7d5e9c23}
+
+
+Definition at line 95 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_aa8eefb9bf8bad3161b1b878bd55236c5}{}\index{kaco2pvo@{kaco2pvo}!L\+O\+G\+G\+E\+R5@{L\+O\+G\+G\+E\+R5}}
+\index{L\+O\+G\+G\+E\+R5@{L\+O\+G\+G\+E\+R5}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{L\+O\+G\+G\+E\+R5}]{\setlength{\rightskip}{0pt plus 5cm}tuple kaco2pvo.\+L\+O\+G\+G\+E\+R5 = logging.\+get\+Logger(\textquotesingle{}kaco2pv.\+inverter\textquotesingle{})}\label{namespacekaco2pvo_aa8eefb9bf8bad3161b1b878bd55236c5}
+
+
+Definition at line 97 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_ab56cb6cd6e8dc59acbbf03cb09c7a522}{}\index{kaco2pvo@{kaco2pvo}!L\+O\+G\+G\+E\+R6@{L\+O\+G\+G\+E\+R6}}
+\index{L\+O\+G\+G\+E\+R6@{L\+O\+G\+G\+E\+R6}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{L\+O\+G\+G\+E\+R6}]{\setlength{\rightskip}{0pt plus 5cm}tuple kaco2pvo.\+L\+O\+G\+G\+E\+R6 = logging.\+get\+Logger(\textquotesingle{}kaco2pv.\+raw\textquotesingle{})}\label{namespacekaco2pvo_ab56cb6cd6e8dc59acbbf03cb09c7a522}
+
+
+Definition at line 102 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_afc870a268fa08b616db16d50b19bbd90}{}\index{kaco2pvo@{kaco2pvo}!max\+Temp@{max\+Temp}}
+\index{max\+Temp@{max\+Temp}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{max\+Temp}]{\setlength{\rightskip}{0pt plus 5cm}int kaco2pvo.\+max\+Temp = -\/100}\label{namespacekaco2pvo_afc870a268fa08b616db16d50b19bbd90}
+
+
+Definition at line 168 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_affe215a515246118e429d007acb723a8}{}\index{kaco2pvo@{kaco2pvo}!min\+Temp@{min\+Temp}}
+\index{min\+Temp@{min\+Temp}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{min\+Temp}]{\setlength{\rightskip}{0pt plus 5cm}int kaco2pvo.\+min\+Temp = 100}\label{namespacekaco2pvo_affe215a515246118e429d007acb723a8}
+
+
+Definition at line 167 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_a0cce2912748ba57bbc1609834c0acbc1}{}\index{kaco2pvo@{kaco2pvo}!peak\+Gen@{peak\+Gen}}
+\index{peak\+Gen@{peak\+Gen}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{peak\+Gen}]{\setlength{\rightskip}{0pt plus 5cm}float kaco2pvo.\+peak\+Gen = 0.\+0}\label{namespacekaco2pvo_a0cce2912748ba57bbc1609834c0acbc1}
+
+
+Definition at line 172 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_aee6595766d5a3ac626e685c7dbfa4ed8}{}\index{kaco2pvo@{kaco2pvo}!peak\+Time@{peak\+Time}}
+\index{peak\+Time@{peak\+Time}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{peak\+Time}]{\setlength{\rightskip}{0pt plus 5cm}tuple kaco2pvo.\+peak\+Time = datetime.\+now()}\label{namespacekaco2pvo_aee6595766d5a3ac626e685c7dbfa4ed8}
+
+
+Definition at line 173 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_acdd697a7c8e4d2d9d64dc216df3eca02}{}\index{kaco2pvo@{kaco2pvo}!P\+V\+\_\+\+D\+A\+I\+L\+Y\+\_\+\+U\+P\+L\+O\+A\+D\+\_\+\+T\+I\+M\+E@{P\+V\+\_\+\+D\+A\+I\+L\+Y\+\_\+\+U\+P\+L\+O\+A\+D\+\_\+\+T\+I\+M\+E}}
+\index{P\+V\+\_\+\+D\+A\+I\+L\+Y\+\_\+\+U\+P\+L\+O\+A\+D\+\_\+\+T\+I\+M\+E@{P\+V\+\_\+\+D\+A\+I\+L\+Y\+\_\+\+U\+P\+L\+O\+A\+D\+\_\+\+T\+I\+M\+E}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{P\+V\+\_\+\+D\+A\+I\+L\+Y\+\_\+\+U\+P\+L\+O\+A\+D\+\_\+\+T\+I\+M\+E}]{\setlength{\rightskip}{0pt plus 5cm}tuple kaco2pvo.\+P\+V\+\_\+\+D\+A\+I\+L\+Y\+\_\+\+U\+P\+L\+O\+A\+D\+\_\+\+T\+I\+M\+E}\label{namespacekaco2pvo_acdd697a7c8e4d2d9d64dc216df3eca02}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+1 = TIME\_NOW.replace(hour=PV\_DAILY\_UPLOAD\_TIME\_HOUR,
+2                                         minute=PV\_DAILY\_UPLOAD\_TIME\_MIN,
+3                                         second=0, microsecond=0)
+\end{DoxyCode}
+
+
+Definition at line 150 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_a8ee8c3a356a6e5070403190c5a5c111c}{}\index{kaco2pvo@{kaco2pvo}!P\+V\+\_\+\+D\+A\+I\+L\+Y\+\_\+\+U\+P\+L\+O\+A\+D\+\_\+\+T\+I\+M\+E\+\_\+\+H\+O\+U\+R@{P\+V\+\_\+\+D\+A\+I\+L\+Y\+\_\+\+U\+P\+L\+O\+A\+D\+\_\+\+T\+I\+M\+E\+\_\+\+H\+O\+U\+R}}
+\index{P\+V\+\_\+\+D\+A\+I\+L\+Y\+\_\+\+U\+P\+L\+O\+A\+D\+\_\+\+T\+I\+M\+E\+\_\+\+H\+O\+U\+R@{P\+V\+\_\+\+D\+A\+I\+L\+Y\+\_\+\+U\+P\+L\+O\+A\+D\+\_\+\+T\+I\+M\+E\+\_\+\+H\+O\+U\+R}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{P\+V\+\_\+\+D\+A\+I\+L\+Y\+\_\+\+U\+P\+L\+O\+A\+D\+\_\+\+T\+I\+M\+E\+\_\+\+H\+O\+U\+R}]{\setlength{\rightskip}{0pt plus 5cm}int kaco2pvo.\+P\+V\+\_\+\+D\+A\+I\+L\+Y\+\_\+\+U\+P\+L\+O\+A\+D\+\_\+\+T\+I\+M\+E\+\_\+\+H\+O\+U\+R = 23}\label{namespacekaco2pvo_a8ee8c3a356a6e5070403190c5a5c111c}
+
+
+Definition at line 145 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_adfa392fe355836276e546d4d6d4eca52}{}\index{kaco2pvo@{kaco2pvo}!P\+V\+\_\+\+D\+A\+I\+L\+Y\+\_\+\+U\+P\+L\+O\+A\+D\+\_\+\+T\+I\+M\+E\+\_\+\+M\+I\+N@{P\+V\+\_\+\+D\+A\+I\+L\+Y\+\_\+\+U\+P\+L\+O\+A\+D\+\_\+\+T\+I\+M\+E\+\_\+\+M\+I\+N}}
+\index{P\+V\+\_\+\+D\+A\+I\+L\+Y\+\_\+\+U\+P\+L\+O\+A\+D\+\_\+\+T\+I\+M\+E\+\_\+\+M\+I\+N@{P\+V\+\_\+\+D\+A\+I\+L\+Y\+\_\+\+U\+P\+L\+O\+A\+D\+\_\+\+T\+I\+M\+E\+\_\+\+M\+I\+N}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{P\+V\+\_\+\+D\+A\+I\+L\+Y\+\_\+\+U\+P\+L\+O\+A\+D\+\_\+\+T\+I\+M\+E\+\_\+\+M\+I\+N}]{\setlength{\rightskip}{0pt plus 5cm}int kaco2pvo.\+P\+V\+\_\+\+D\+A\+I\+L\+Y\+\_\+\+U\+P\+L\+O\+A\+D\+\_\+\+T\+I\+M\+E\+\_\+\+M\+I\+N = 45}\label{namespacekaco2pvo_adfa392fe355836276e546d4d6d4eca52}
+
+
+Definition at line 146 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_ae4ae0e0b0d3db2f9db79cda692b34f21}{}\index{kaco2pvo@{kaco2pvo}!pvdata@{pvdata}}
+\index{pvdata@{pvdata}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{pvdata}]{\setlength{\rightskip}{0pt plus 5cm}tuple kaco2pvo.\+pvdata}\label{namespacekaco2pvo_ae4ae0e0b0d3db2f9db79cda692b34f21}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+1 = logging.handlers.TimedRotatingFileHandler(LOG\_READINGS\_FILENAME,
+2                                                    when=\textcolor{stringliteral}{'midnight'},
+3                                                    interval=1,
+4                                                    backupCount=14,
+5                                                    encoding=\textcolor{keywordtype}{None},
+6                                                    delay=\textcolor{keyword}{False},
+7                                                    utc=\textcolor{keyword}{False})
+\end{DoxyCode}
+
+
+Definition at line 103 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_a9e9b5ee47557bde93b45c986ada366c4}{}\index{kaco2pvo@{kaco2pvo}!P\+V\+O\+\_\+\+H\+O\+S\+T@{P\+V\+O\+\_\+\+H\+O\+S\+T}}
+\index{P\+V\+O\+\_\+\+H\+O\+S\+T@{P\+V\+O\+\_\+\+H\+O\+S\+T}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{P\+V\+O\+\_\+\+H\+O\+S\+T}]{\setlength{\rightskip}{0pt plus 5cm}string kaco2pvo.\+P\+V\+O\+\_\+\+H\+O\+S\+T = \char`\"{}pvoutput.\+org\char`\"{}}\label{namespacekaco2pvo_a9e9b5ee47557bde93b45c986ada366c4}
+
+
+Definition at line 132 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_ad88154b2fb00beb1cfbfae5585af5ac9}{}\index{kaco2pvo@{kaco2pvo}!P\+V\+O\+\_\+\+K\+E\+Y@{P\+V\+O\+\_\+\+K\+E\+Y}}
+\index{P\+V\+O\+\_\+\+K\+E\+Y@{P\+V\+O\+\_\+\+K\+E\+Y}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{P\+V\+O\+\_\+\+K\+E\+Y}]{\setlength{\rightskip}{0pt plus 5cm}string kaco2pvo.\+P\+V\+O\+\_\+\+K\+E\+Y = \char`\"{}7ed8a297d387d3887dbd8059c5d8544382a4a12b\char`\"{}}\label{namespacekaco2pvo_ad88154b2fb00beb1cfbfae5585af5ac9}
+
+
+Definition at line 137 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_aa9eb4b879b1b7bc4d18c426a30003d8a}{}\index{kaco2pvo@{kaco2pvo}!P\+V\+O\+\_\+\+O\+U\+T\+P\+U\+T\+\_\+\+U\+R\+I@{P\+V\+O\+\_\+\+O\+U\+T\+P\+U\+T\+\_\+\+U\+R\+I}}
+\index{P\+V\+O\+\_\+\+O\+U\+T\+P\+U\+T\+\_\+\+U\+R\+I@{P\+V\+O\+\_\+\+O\+U\+T\+P\+U\+T\+\_\+\+U\+R\+I}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{P\+V\+O\+\_\+\+O\+U\+T\+P\+U\+T\+\_\+\+U\+R\+I}]{\setlength{\rightskip}{0pt plus 5cm}string kaco2pvo.\+P\+V\+O\+\_\+\+O\+U\+T\+P\+U\+T\+\_\+\+U\+R\+I = \char`\"{}/service/r2/addoutput.\+jsp\char`\"{}}\label{namespacekaco2pvo_aa9eb4b879b1b7bc4d18c426a30003d8a}
+
+
+Definition at line 134 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_af394104e75126491b592392ef4a496c3}{}\index{kaco2pvo@{kaco2pvo}!P\+V\+O\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+I\+N\+T\+E\+R\+V\+A\+L@{P\+V\+O\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+I\+N\+T\+E\+R\+V\+A\+L}}
+\index{P\+V\+O\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+I\+N\+T\+E\+R\+V\+A\+L@{P\+V\+O\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+I\+N\+T\+E\+R\+V\+A\+L}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{P\+V\+O\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+I\+N\+T\+E\+R\+V\+A\+L}]{\setlength{\rightskip}{0pt plus 5cm}int kaco2pvo.\+P\+V\+O\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+I\+N\+T\+E\+R\+V\+A\+L = 5}\label{namespacekaco2pvo_af394104e75126491b592392ef4a496c3}
+
+
+Definition at line 141 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_a1c058de251e3097097b3ca46627e9572}{}\index{kaco2pvo@{kaco2pvo}!P\+V\+O\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+U\+R\+I@{P\+V\+O\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+U\+R\+I}}
+\index{P\+V\+O\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+U\+R\+I@{P\+V\+O\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+U\+R\+I}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{P\+V\+O\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+U\+R\+I}]{\setlength{\rightskip}{0pt plus 5cm}string kaco2pvo.\+P\+V\+O\+\_\+\+S\+T\+A\+T\+U\+S\+\_\+\+U\+R\+I = \char`\"{}/service/r2/addstatus.\+jsp\char`\"{}}\label{namespacekaco2pvo_a1c058de251e3097097b3ca46627e9572}
+
+
+Definition at line 133 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_aa43938367200428da66c8ef5a5997de1}{}\index{kaco2pvo@{kaco2pvo}!P\+V\+O\+\_\+\+S\+Y\+S\+T\+E\+M\+\_\+\+I\+D@{P\+V\+O\+\_\+\+S\+Y\+S\+T\+E\+M\+\_\+\+I\+D}}
+\index{P\+V\+O\+\_\+\+S\+Y\+S\+T\+E\+M\+\_\+\+I\+D@{P\+V\+O\+\_\+\+S\+Y\+S\+T\+E\+M\+\_\+\+I\+D}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{P\+V\+O\+\_\+\+S\+Y\+S\+T\+E\+M\+\_\+\+I\+D}]{\setlength{\rightskip}{0pt plus 5cm}string kaco2pvo.\+P\+V\+O\+\_\+\+S\+Y\+S\+T\+E\+M\+\_\+\+I\+D = \char`\"{}24657\char`\"{}}\label{namespacekaco2pvo_aa43938367200428da66c8ef5a5997de1}
+
+
+Definition at line 139 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_ac673eb9e5b727f759eeea8edb990c81c}{}\index{kaco2pvo@{kaco2pvo}!P\+V\+S\+\_\+\+D\+E\+V\+I\+C\+E@{P\+V\+S\+\_\+\+D\+E\+V\+I\+C\+E}}
+\index{P\+V\+S\+\_\+\+D\+E\+V\+I\+C\+E@{P\+V\+S\+\_\+\+D\+E\+V\+I\+C\+E}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{P\+V\+S\+\_\+\+D\+E\+V\+I\+C\+E}]{\setlength{\rightskip}{0pt plus 5cm}string kaco2pvo.\+P\+V\+S\+\_\+\+D\+E\+V\+I\+C\+E = \char`\"{}/dev/tty\+U\+S\+B0\char`\"{}}\label{namespacekaco2pvo_ac673eb9e5b727f759eeea8edb990c81c}
+
+
+Definition at line 126 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_aecad1a1f015e701294ae4e083bfade40}{}\index{kaco2pvo@{kaco2pvo}!P\+V\+S\+\_\+\+M\+A\+X\+\_\+\+P\+V\+P@{P\+V\+S\+\_\+\+M\+A\+X\+\_\+\+P\+V\+P}}
+\index{P\+V\+S\+\_\+\+M\+A\+X\+\_\+\+P\+V\+P@{P\+V\+S\+\_\+\+M\+A\+X\+\_\+\+P\+V\+P}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{P\+V\+S\+\_\+\+M\+A\+X\+\_\+\+P\+V\+P}]{\setlength{\rightskip}{0pt plus 5cm}float kaco2pvo.\+P\+V\+S\+\_\+\+M\+A\+X\+\_\+\+P\+V\+P = 6000.\+0}\label{namespacekaco2pvo_aecad1a1f015e701294ae4e083bfade40}
+
+
+Definition at line 130 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_a254420e2cbb7034d7e494c8176a724ad}{}\index{kaco2pvo@{kaco2pvo}!P\+V\+S\+\_\+\+M\+I\+N\+\_\+\+P\+V\+P@{P\+V\+S\+\_\+\+M\+I\+N\+\_\+\+P\+V\+P}}
+\index{P\+V\+S\+\_\+\+M\+I\+N\+\_\+\+P\+V\+P@{P\+V\+S\+\_\+\+M\+I\+N\+\_\+\+P\+V\+P}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{P\+V\+S\+\_\+\+M\+I\+N\+\_\+\+P\+V\+P}]{\setlength{\rightskip}{0pt plus 5cm}float kaco2pvo.\+P\+V\+S\+\_\+\+M\+I\+N\+\_\+\+P\+V\+P = 7.\+5}\label{namespacekaco2pvo_a254420e2cbb7034d7e494c8176a724ad}
+
+
+Definition at line 128 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_aa1171dcdb6218f78cd24095e33df03b0}{}\index{kaco2pvo@{kaco2pvo}!S\+A\+M\+P\+L\+E\+\_\+\+T\+I\+M\+E@{S\+A\+M\+P\+L\+E\+\_\+\+T\+I\+M\+E}}
+\index{S\+A\+M\+P\+L\+E\+\_\+\+T\+I\+M\+E@{S\+A\+M\+P\+L\+E\+\_\+\+T\+I\+M\+E}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{S\+A\+M\+P\+L\+E\+\_\+\+T\+I\+M\+E}]{\setlength{\rightskip}{0pt plus 5cm}int kaco2pvo.\+S\+A\+M\+P\+L\+E\+\_\+\+T\+I\+M\+E = 10}\label{namespacekaco2pvo_aa1171dcdb6218f78cd24095e33df03b0}
+
+
+Definition at line 143 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_adbaf401038663576c5820bae830b8c66}{}\index{kaco2pvo@{kaco2pvo}!sunrise\+Hour@{sunrise\+Hour}}
+\index{sunrise\+Hour@{sunrise\+Hour}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{sunrise\+Hour}]{\setlength{\rightskip}{0pt plus 5cm}int kaco2pvo.\+sunrise\+Hour = 9}\label{namespacekaco2pvo_adbaf401038663576c5820bae830b8c66}
+
+
+Definition at line 175 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_ad285210c5c2a47f71ea80963c7ec5659}{}\index{kaco2pvo@{kaco2pvo}!T\+I\+M\+E\+\_\+\+N\+O\+W@{T\+I\+M\+E\+\_\+\+N\+O\+W}}
+\index{T\+I\+M\+E\+\_\+\+N\+O\+W@{T\+I\+M\+E\+\_\+\+N\+O\+W}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{T\+I\+M\+E\+\_\+\+N\+O\+W}]{\setlength{\rightskip}{0pt plus 5cm}tuple kaco2pvo.\+T\+I\+M\+E\+\_\+\+N\+O\+W = datetime.\+now()}\label{namespacekaco2pvo_ad285210c5c2a47f71ea80963c7ec5659}
+
+
+Definition at line 149 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_a0896e4e9c1e2071ff9dad79ca4c1ac90}{}\index{kaco2pvo@{kaco2pvo}!total\+Amps@{total\+Amps}}
+\index{total\+Amps@{total\+Amps}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{total\+Amps}]{\setlength{\rightskip}{0pt plus 5cm}float kaco2pvo.\+total\+Amps = 0.\+0}\label{namespacekaco2pvo_a0896e4e9c1e2071ff9dad79ca4c1ac90}
+
+
+Definition at line 159 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_a6a9f776486bf396d4fc1fe7e58b49504}{}\index{kaco2pvo@{kaco2pvo}!total\+Gen@{total\+Gen}}
+\index{total\+Gen@{total\+Gen}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{total\+Gen}]{\setlength{\rightskip}{0pt plus 5cm}float kaco2pvo.\+total\+Gen = 0.\+0}\label{namespacekaco2pvo_a6a9f776486bf396d4fc1fe7e58b49504}
+
+
+Definition at line 158 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_ae4761990f981a3df61f7d33feda1bd7d}{}\index{kaco2pvo@{kaco2pvo}!total\+Readings@{total\+Readings}}
+\index{total\+Readings@{total\+Readings}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{total\+Readings}]{\setlength{\rightskip}{0pt plus 5cm}int kaco2pvo.\+total\+Readings = 0}\label{namespacekaco2pvo_ae4761990f981a3df61f7d33feda1bd7d}
+
+
+Definition at line 161 of file kaco2pvo.\+py.
+
+\hypertarget{namespacekaco2pvo_a494df69766f24f66f1cc08bd7c12391e}{}\index{kaco2pvo@{kaco2pvo}!total\+Volts@{total\+Volts}}
+\index{total\+Volts@{total\+Volts}!kaco2pvo@{kaco2pvo}}
+\subsubsection[{total\+Volts}]{\setlength{\rightskip}{0pt plus 5cm}float kaco2pvo.\+total\+Volts = 0.\+0}\label{namespacekaco2pvo_a494df69766f24f66f1cc08bd7c12391e}
+
+
+Definition at line 160 of file kaco2pvo.\+py.
+

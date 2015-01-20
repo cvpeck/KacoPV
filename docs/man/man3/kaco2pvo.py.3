@@ -1,0 +1,195 @@
+.TH "kaco2pvo.py" 3 "Tue Jan 20 2015" "kaco2pv" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+kaco2pvo.py \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBkaco2pvo\&.powerReading\fP"
+.br
+.in -1c
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBkaco2pvo\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "def \fBkaco2pvo\&.num\fP (stringToConvert)"
+.br
+.ti -1c
+.RI "def \fBkaco2pvo\&.post\fP (uri, params)"
+.br
+.ti -1c
+.RI "def \fBkaco2pvo\&.postPVstatus\fP (pvsTimeOfReading, pvsEnergyGen, pvsPowerGen, pvsEnergyUse, pvsPowerUse, pvsTemp, pvsVolts)"
+.br
+.ti -1c
+.RI "def \fBkaco2pvo\&.postPVoutput\fP (pvoDateOfOutput, pvoGenerated, pvoExported, pvoPeakPower, pvoPeakTime, pvoCondition, pvoMinTemp, pvoMaxTemp, pvoImportPeak, pvoImportOffPeak, pvoImportShoulder, pvoImportHighShoulder, pvoConsumption, pvoComment)"
+.br
+.ti -1c
+.RI "def \fBkaco2pvo\&.addReading\fP (newPowerReading)"
+.br
+.ti -1c
+.RI "def \fBkaco2pvo\&.processReading\fP (readingToProcess)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "string \fBkaco2pvo\&.LOG_FILENAME\fP = '/var/log/solar/kaco2pv\&.log'"
+.br
+.ti -1c
+.RI "string \fBkaco2pvo\&.LOG_READINGS_FILENAME\fP = '/var/log/solar/kaco2pv_readings\&.log'"
+.br
+.ti -1c
+.RI "string \fBkaco2pvo\&.format\fP = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'"
+.br
+.ti -1c
+.RI "string \fBkaco2pvo\&.datefmt\fP = '%m-%d %H:%M'"
+.br
+.ti -1c
+.RI "\fBkaco2pvo\&.filename\fP = LOG_FILENAME,"
+.br
+.ti -1c
+.RI "string \fBkaco2pvo\&.filemode\fP = 'w'"
+.br
+.ti -1c
+.RI "tuple \fBkaco2pvo\&.CONSOLE\fP = logging\&.StreamHandler()"
+.br
+.ti -1c
+.RI "tuple \fBkaco2pvo\&.FORMATTER\fP = logging\&.Formatter('%(name)-12s: %(levelname)-8s %(message)s')"
+.br
+.ti -1c
+.RI "tuple \fBkaco2pvo\&.LOGGER1\fP = logging\&.getLogger('kaco2pv\&.general')"
+.br
+.ti -1c
+.RI "tuple \fBkaco2pvo\&.LOGGER2\fP = logging\&.getLogger('kaco2pv\&.dailyreadings')"
+.br
+.ti -1c
+.RI "tuple \fBkaco2pvo\&.LOGGER3\fP = logging\&.getLogger('kaco2pv\&.readings')"
+.br
+.ti -1c
+.RI "tuple \fBkaco2pvo\&.LOGGER4\fP = logging\&.getLogger('kaco2pv\&.posting')"
+.br
+.ti -1c
+.RI "tuple \fBkaco2pvo\&.LOGGER5\fP = logging\&.getLogger('kaco2pv\&.inverter')"
+.br
+.ti -1c
+.RI "tuple \fBkaco2pvo\&.LOGGER6\fP = logging\&.getLogger('kaco2pv\&.raw')"
+.br
+.ti -1c
+.RI "tuple \fBkaco2pvo\&.pvdata\fP"
+.br
+.ti -1c
+.RI "tuple \fBkaco2pvo\&.formatter\fP = logging\&.Formatter('%(message)s')"
+.br
+.ti -1c
+.RI "string \fBkaco2pvo\&.PVS_DEVICE\fP = '/dev/ttyUSB0'"
+.br
+.ti -1c
+.RI "float \fBkaco2pvo\&.PVS_MIN_PVP\fP = 7\&.5"
+.br
+.ti -1c
+.RI "float \fBkaco2pvo\&.PVS_MAX_PVP\fP = 6000\&.0"
+.br
+.ti -1c
+.RI "string \fBkaco2pvo\&.PVO_HOST\fP = 'pvoutput\&.org'"
+.br
+.ti -1c
+.RI "string \fBkaco2pvo\&.PVO_STATUS_URI\fP = '/service/r2/addstatus\&.jsp'"
+.br
+.ti -1c
+.RI "string \fBkaco2pvo\&.PVO_OUTPUT_URI\fP = '/service/r2/addoutput\&.jsp'"
+.br
+.ti -1c
+.RI "string \fBkaco2pvo\&.PVO_KEY\fP = '7ed8a297d387d3887dbd8059c5d8544382a4a12b'"
+.br
+.ti -1c
+.RI "string \fBkaco2pvo\&.PVO_SYSTEM_ID\fP = '24657'"
+.br
+.ti -1c
+.RI "int \fBkaco2pvo\&.PVO_STATUS_INTERVAL\fP = 5"
+.br
+.ti -1c
+.RI "int \fBkaco2pvo\&.SAMPLE_TIME\fP = 10"
+.br
+.ti -1c
+.RI "int \fBkaco2pvo\&.PV_DAILY_UPLOAD_TIME_HOUR\fP = 23"
+.br
+.ti -1c
+.RI "int \fBkaco2pvo\&.PV_DAILY_UPLOAD_TIME_MIN\fP = 45"
+.br
+.ti -1c
+.RI "tuple \fBkaco2pvo\&.TIME_NOW\fP = datetime\&.now()"
+.br
+.ti -1c
+.RI "tuple \fBkaco2pvo\&.PV_DAILY_UPLOAD_TIME\fP"
+.br
+.ti -1c
+.RI "\fBkaco2pvo\&.LOCAL_ONLY_TESTING\fP = False"
+.br
+.ti -1c
+.RI "float \fBkaco2pvo\&._totalUse\fP = 0\&.0"
+.br
+.ti -1c
+.RI "float \fBkaco2pvo\&.totalGen\fP = 0\&.0"
+.br
+.ti -1c
+.RI "float \fBkaco2pvo\&.totalAmps\fP = 0\&.0"
+.br
+.ti -1c
+.RI "float \fBkaco2pvo\&.totalVolts\fP = 0\&.0"
+.br
+.ti -1c
+.RI "int \fBkaco2pvo\&.totalReadings\fP = 0"
+.br
+.ti -1c
+.RI "\fBkaco2pvo\&.lastStatus\fP = datetime\&.min"
+.br
+.ti -1c
+.RI "float \fBkaco2pvo\&.dailyUse\fP = 0\&.0"
+.br
+.ti -1c
+.RI "float \fBkaco2pvo\&.dailyGen\fP = 0\&.0"
+.br
+.ti -1c
+.RI "float \fBkaco2pvo\&.dailyEnergy\fP = 0\&.0"
+.br
+.ti -1c
+.RI "int \fBkaco2pvo\&.minTemp\fP = 100"
+.br
+.ti -1c
+.RI "int \fBkaco2pvo\&.maxTemp\fP = -100"
+.br
+.ti -1c
+.RI "int \fBkaco2pvo\&.dailyReadings\fP = 0"
+.br
+.ti -1c
+.RI "\fBkaco2pvo\&.lastOutput\fP = datetime\&.min"
+.br
+.ti -1c
+.RI "float \fBkaco2pvo\&.peakGen\fP = 0\&.0"
+.br
+.ti -1c
+.RI "tuple \fBkaco2pvo\&.peakTime\fP = datetime\&.now()"
+.br
+.ti -1c
+.RI "int \fBkaco2pvo\&.sunriseHour\fP = 9"
+.br
+.ti -1c
+.RI "\fBkaco2pvo\&.fullDaysReadings\fP = False"
+.br
+.in -1c
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for kaco2pv from the source code\&.
