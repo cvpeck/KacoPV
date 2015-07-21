@@ -360,7 +360,10 @@ def addReading(newPowerReading):
     LOGGER2.debug("timeNow.minute = " + str(timeNow.minute))
     LOGGER2.debug("timeNow.day = " + str(timeNow.day))
     LOGGER2.debug("lastOutput.day = " + str(lastOutput.day))
-    if (timeNow > PV_DAILY_UPLOAD_TIME) and (timeNow.day > lastOutput.day):
+    # Check whether its time to upload daily results
+    # The time has to be after the PV_DAILY_UPLOAD_TIME
+    # The lastOutput either has to have been never(epoch) or not today 
+    if (timeNow > PV_DAILY_UPLOAD_TIME) and ( (timeNow.day != lastOutput.day) or (lastOutput == datetime.min))
         daysGen = int((dailyGen / dailyReadings) * 24.0)
         LOGGER2.info("Time to output EOD")
         LOGGER2.info("DaysGen:" + str(daysGen) + "W")
