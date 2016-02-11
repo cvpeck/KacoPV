@@ -1,0 +1,211 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		A20A83E41C6C3F4100CB0A04 /* readme.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = readme.txt; sourceTree = "<group>"; };
+		A20A83EA1C6C3F9400CB0A04 /* docs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = docs; sourceTree = "<group>"; };
+		A20A83EB1C6C3F9400CB0A04 /* kaco2pvo.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = kaco2pvo.py; sourceTree = "<group>"; };
+		A20A83EC1C6C3F9400CB0A04 /* kaco2pvo.py.rclocal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = kaco2pvo.py.rclocal; sourceTree = "<group>"; };
+		A20A83ED1C6C3F9400CB0A04 /* kaco2pvoutput_doxygen.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = kaco2pvoutput_doxygen.conf; sourceTree = "<group>"; };
+		A20A83EE1C6C3F9400CB0A04 /* logrotate */ = {isa = PBXFileReference; lastKnownFileType = folder; path = logrotate; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		A20A83DB1C6C3F4000CB0A04 = {
+			isa = PBXGroup;
+			children = (
+				A20A83E11C6C3F4100CB0A04 /* kaco2pvo */,
+			);
+			sourceTree = "<group>";
+		};
+		A20A83E11C6C3F4100CB0A04 /* kaco2pvo */ = {
+			isa = PBXGroup;
+			children = (
+				A20A83EA1C6C3F9400CB0A04 /* docs */,
+				A20A83EB1C6C3F9400CB0A04 /* kaco2pvo.py */,
+				A20A83EC1C6C3F9400CB0A04 /* kaco2pvo.py.rclocal */,
+				A20A83ED1C6C3F9400CB0A04 /* kaco2pvoutput_doxygen.conf */,
+				A20A83EE1C6C3F9400CB0A04 /* logrotate */,
+				A20A83E31C6C3F4100CB0A04 /* Supporting Files */,
+			);
+			path = kaco2pvo;
+			sourceTree = "<group>";
+		};
+		A20A83E31C6C3F4100CB0A04 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A20A83E41C6C3F4100CB0A04 /* readme.txt */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		A20A83E01C6C3F4000CB0A04 /* kaco2pvo */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = A20A83E71C6C3F4100CB0A04 /* Build configuration list for PBXLegacyTarget "kaco2pvo" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/local/bin/python3;
+			dependencies = (
+			);
+			name = kaco2pvo;
+			passBuildSettingsInEnvironment = 1;
+			productName = kaco2pvo;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		A20A83DC1C6C3F4000CB0A04 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = "Chris Peck";
+				TargetAttributes = {
+					A20A83E01C6C3F4000CB0A04 = {
+						CreatedOnToolsVersion = 7.2.1;
+					};
+				};
+			};
+			buildConfigurationList = A20A83DF1C6C3F4000CB0A04 /* Build configuration list for PBXProject "kaco2pvo" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = A20A83DB1C6C3F4000CB0A04;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A20A83E01C6C3F4000CB0A04 /* kaco2pvo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		A20A83E51C6C3F4100CB0A04 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+			};
+			name = Debug;
+		};
+		A20A83E61C6C3F4100CB0A04 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+			};
+			name = Release;
+		};
+		A20A83E81C6C3F4100CB0A04 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUGGING_SYMBOLS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		A20A83E91C6C3F4100CB0A04 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A20A83DF1C6C3F4000CB0A04 /* Build configuration list for PBXProject "kaco2pvo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A20A83E51C6C3F4100CB0A04 /* Debug */,
+				A20A83E61C6C3F4100CB0A04 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A20A83E71C6C3F4100CB0A04 /* Build configuration list for PBXLegacyTarget "kaco2pvo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A20A83E81C6C3F4100CB0A04 /* Debug */,
+				A20A83E91C6C3F4100CB0A04 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A20A83DC1C6C3F4000CB0A04 /* Project object */;
+}
