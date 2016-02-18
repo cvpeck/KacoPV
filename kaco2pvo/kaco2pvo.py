@@ -66,13 +66,6 @@ LOG_READINGS_FILENAME = LOG_BASEDIR + "kaco2pv_readings.log"
 
 
 
-def makeSurePathExists(path):
-    try:
-        os.makedirs(path)
-    except OSError as exception:
-        if exception.errno != errno.EEXIST:
-            raise
-
 
 makeSurePathExists(LOG_BASEDIR)
 
