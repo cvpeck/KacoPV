@@ -57,10 +57,24 @@ import urllib, urllib.parse
 # Import requirements for logging
 import logging
 import logging.handlers
+import os
+import errno
 
-LOG_FILENAME = '/var/log/solar/kaco2pv.log'
-LOG_READINGS_FILENAME = '/var/log/solar/kaco2pv_readings.log'
+LOG_BASEDIR = "/var/log/solar/"
+LOG_FILENAME = LOG_BASEDIR + "kaco2pv.log"
+LOG_READINGS_FILENAME = LOG_BASEDIR + "kaco2pv_readings.log"
 
+
+
+def makeSurePathExists(path):
+    try:
+        os.makedirs(path)
+    except OSError as exception:
+        if exception.errno != errno.EEXIST:
+            raise
+
+
+makeSurePathExists(LOG_BASEDIR)
 
 # Setup logging
 # set up logging to file
@@ -123,7 +137,10 @@ LOGGER1.info("modified by Chris Peck for Kaco Inverters")
 LOGGER1.info("Startup")
 
 # May need changing
+# Device normally used on Raspberry pi
 PVS_DEVICE = "/dev/ttyUSB0"
+# Device used on Mac
+# PVS_DEVICE = "/dev/cu.usbserial"
 # PV generation values (W) less than this will be set to 0
 PVS_MIN_PVP = 7.5
 # PV generation values greater than this will be set to this
