@@ -57,6 +57,27 @@ class PowerStats:
     def caclulate_stats(self, power_reading):
         """ forces recalculation of stats """
         self._stats['generated_total'] += power_reading['generated_power']
+        self._stats['amps_total'] += power_reading['generator_current']
+        self._stats['volts_total'] += power_reading['generator_voltage']
+        if self._stats['generated_peak'] < power_reading['generated_peak']:
+            self._stats['generated_peak'] = power_reading['generated_peak']
+            self._stats['time_peak'] = power_reading['time_peak']
+        if self._stats['temperature_max'] < power_reading['generator_temperature']:
+            self._stats['temperature_max'] = power_reading['generator_temperature']
+        if self._stats['temperature_min'] > power_reading['generator_temperature']:
+            self._stats['temperature_min'] = power_reading['generator_temperature']
+
+
+        # TODO
+        self._stats['energy_daily'] = 0.0
+        self._stats['generated_daily'] = 0.0
+        self._stats['readings_daily'] = 0.0
+        self._stats['output_last'] = datetime.min
+        self._stats['generated_average'] = 0.0
+        self._stats['current_average'] = 0.0
+        self._stats['voltage_average'] = 0.0
+
+
 
     def create_stats(self):
         """ creates stats dictionary """
@@ -66,7 +87,6 @@ class PowerStats:
     def clear_stats(self):
         """ clears stats """
         self._stats['generated_total'] = 0.0
-        self._stats['readings_total'] = 0
         self._stats['status_last'] = 0
         self._stats['amps_total'] = 0.0
         self._stats['volts_total'] = 0.0

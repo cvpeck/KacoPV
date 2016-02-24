@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """ @package docstring
     Documentation for this module
-    
+
     Process to take serial data from Kaco inverter and upload
     to pvoutput.org
     # Upload from Kaco Powador serial output to pvoutput.org live feed
@@ -45,12 +45,20 @@
     #
     """
 import os
+import errno
 
-
-def makeSurePathExists(path):
+def make_sure_path_exists(path):
+    """ Checks whether a path exists and createst directory if not """
     try:
         os.makedirs(path)
     except OSError as exception:
         if exception.errno != errno.EEXIST:
             raise
+
+def num(string_to_convert):
+    """ returns an int or float from string """
+    try:
+        return int(string_to_convert)
+    except ValueError:
+        return float(string_to_convert)
 

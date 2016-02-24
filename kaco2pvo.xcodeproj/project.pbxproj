@@ -9,14 +9,17 @@
 /* Begin PBXFileReference section */
 		A20A83E41C6C3F4100CB0A04 /* readme.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = readme.txt; sourceTree = "<group>"; };
 		A20A83EA1C6C3F9400CB0A04 /* docs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = docs; sourceTree = "<group>"; };
-		A20A83EB1C6C3F9400CB0A04 /* kaco2pvo.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = kaco2pvo.py; sourceTree = "<group>"; };
+		A20A83EB1C6C3F9400CB0A04 /* kaco2pvo_old.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = kaco2pvo_old.py; sourceTree = "<group>"; };
 		A20A83EC1C6C3F9400CB0A04 /* kaco2pvo.py.rclocal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = kaco2pvo.py.rclocal; sourceTree = "<group>"; };
 		A20A83ED1C6C3F9400CB0A04 /* kaco2pvoutput_doxygen.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = kaco2pvoutput_doxygen.conf; sourceTree = "<group>"; };
 		A20A83EE1C6C3F9400CB0A04 /* logrotate */ = {isa = PBXFileReference; lastKnownFileType = folder; path = logrotate; sourceTree = "<group>"; };
 		A24655CC1C75BC0100B34600 /* PowerStats.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = PowerStats.py; sourceTree = "<group>"; };
-		A24655CD1C75BF1200B34600 /* utilites.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = utilites.py; sourceTree = "<group>"; };
+		A24655CD1C75BF1200B34600 /* Utilities.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = Utilities.py; sourceTree = "<group>"; };
 		A24655CE1C75C4BA00B34600 /* TestPowerStats.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = TestPowerStats.py; sourceTree = "<group>"; };
 		A24655D01C75C82F00B34600 /* PowerReading.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = PowerReading.py; sourceTree = "<group>"; };
+		A24655D11C75F06A00B34600 /* Generator.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = Generator.py; sourceTree = "<group>"; };
+		A29483111C7D33F50088D230 /* kaco2pvo.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = kaco2pvo.py; sourceTree = "<group>"; };
+		A29483121C7D625A0088D230 /* DataService.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = DataService.py; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -33,11 +36,14 @@
 				A20A83EA1C6C3F9400CB0A04 /* docs */,
 				A20A83EE1C6C3F9400CB0A04 /* logrotate */,
 				A20A83ED1C6C3F9400CB0A04 /* kaco2pvoutput_doxygen.conf */,
-				A20A83EB1C6C3F9400CB0A04 /* kaco2pvo.py */,
+				A20A83EB1C6C3F9400CB0A04 /* kaco2pvo_old.py */,
+				A29483111C7D33F50088D230 /* kaco2pvo.py */,
+				A29483121C7D625A0088D230 /* DataService.py */,
 				A24655D01C75C82F00B34600 /* PowerReading.py */,
+				A24655D11C75F06A00B34600 /* Generator.py */,
 				A24655CC1C75BC0100B34600 /* PowerStats.py */,
 				A24655CE1C75C4BA00B34600 /* TestPowerStats.py */,
-				A24655CD1C75BF1200B34600 /* utilites.py */,
+				A24655CD1C75BF1200B34600 /* Utilities.py */,
 				A20A83EC1C6C3F9400CB0A04 /* kaco2pvo.py.rclocal */,
 				A20A83E31C6C3F4100CB0A04 /* Supporting Files */,
 			);
