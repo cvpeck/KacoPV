@@ -48,11 +48,11 @@ from datetime import datetime
 
 
 # Import utilities
-import Utilities
+from Utilities import *
 
 
 # Import requirements for logging
-import logging
+#import logging
 import logging.handlers
 
 LOG_BASEDIR = "/var/log/solar/"
@@ -62,7 +62,7 @@ LOG_READINGS_FILENAME = LOG_BASEDIR + "kaco2pv_readings.log"
 
 
 
-Utilities.make_sure_path_exists(LOG_BASEDIR)
+make_sure_path_exists(LOG_BASEDIR)
 
 # Setup logging
 # set up logging to file

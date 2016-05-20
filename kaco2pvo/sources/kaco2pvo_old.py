@@ -55,10 +55,11 @@ import http.client
 import urllib, urllib.parse
 
 # Import requirements for logging
-import logging
+#import logging
 import logging.handlers
-import os
-import errno
+#import os
+#import errno
+from Utilities import *
 
 LOG_BASEDIR = "/var/log/solar/"
 LOG_FILENAME = LOG_BASEDIR + "kaco2pv.log"
@@ -67,7 +68,7 @@ LOG_READINGS_FILENAME = LOG_BASEDIR + "kaco2pv_readings.log"
 
 
 
-makeSurePathExists(LOG_BASEDIR)
+make_sure_path_exists(LOG_BASEDIR)
 
 # Setup logging
 # set up logging to file
