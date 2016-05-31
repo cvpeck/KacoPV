@@ -12,37 +12,7 @@
     #
     # sudo apt-get install python3-serial
     #
-    # Supplied with limited tested for others to tailor to their own needs
-    #
-    # This software in any form is covered by the following Open Source BSD license
-    #
-    # Copyright 2013-2014, Ian Hutt
-    # All rights reserved.
-    #
-    # Redistribution and use in source and binary forms, with or without
-    # modification, are permitted provided that the following conditions are met:
-    #
-    # 1. Redistributions of source code must retain the above copyright notice,
-    # this list of conditions and the following disclaimer.
-    #
-    # 2. Redistributions in binary form must reproduce the above copyright notice,
-    # this list of conditions and the following disclaimer in the documentation
-    # and/or other materials provided with the distribution.
-    #
-    # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS
-    # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-    # THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-    # PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER
-    # OR CONTRIBUTORS BE LIABLE FOR
-    # ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES
-    # (INCLUDING, BUT NOT LIMITE
-    # TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
-    # OR PROFITS; OR BUSINESS INTERRUPTION)
-    # HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-    # STRICT LIABILITY, OR TORT (INCLUDING
-    # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-    # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-    #
+
     """
 
 class DataService:
@@ -53,6 +23,8 @@ class DataService:
         self._data_service['host_url'] = ""
         self._data_service['host_uri_status'] = ""
         self._data_service['host_uri_output'] = ""
+        self._data_service['host_batch_uri_status'] = ""
+        self._data_service['host_batch_uri_output'] = ""
         self._data_service['client_key'] = ""
         self._data_service['client_system_id'] = ""
         self._data_service['host_status_interval'] = ""
@@ -75,6 +47,14 @@ class DataService:
     def set_host_uri_status(self, host_uri_status):
         """ sets the URI for outputting status to on the host """
         self._data_service['host_uri_status'] = host_uri_status
+
+    def set_host_batch_uri_output(self, host_uri_batch_output):
+        """ sets the URI for batch uploading data to on the host """
+        self._data_service['host_uri_batch_output'] = host_uri_batch_output
+
+    def set_host_batch_uri_status(self, host_batch_uri_status):
+        """ sets the URI for batch uploading status to on the host """
+        self._data_service['host_batch_uri_status'] = host_batch_uri_status
 
     def set_client_key(self, client_key):
         """ Sets the client key """

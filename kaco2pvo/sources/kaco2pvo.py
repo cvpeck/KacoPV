@@ -12,55 +12,27 @@
     #
     # sudo apt-get install python3-serial
     #
-    # Supplied with limited tested for others to tailor to their own needs
-    #
-    # This software in any form is covered by the following Open Source BSD license
-    #
-    # Copyright 2013-2014, Ian Hutt
-    # All rights reserved.
-    #
-    # Redistribution and use in source and binary forms, with or without
-    # modification, are permitted provided that the following conditions are met:
-    #
-    # 1. Redistributions of source code must retain the above copyright notice,
-    # this list of conditions and the following disclaimer.
-    #
-    # 2. Redistributions in binary form must reproduce the above copyright notice,
-    # this list of conditions and the following disclaimer in the documentation
-    # and/or other materials provided with the distribution.
-    #
-    # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS
-    # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-    # THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-    # PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER
-    # OR CONTRIBUTORS BE LIABLE FOR
-    # ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES
-    # (INCLUDING, BUT NOT LIMITE
-    # TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
-    # OR PROFITS; OR BUSINESS INTERRUPTION)
-    # HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-    # STRICT LIABILITY, OR TORT (INCLUDING
-    # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-    # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-    #
     """
-from datetime import datetime
-
+from datetime import datetime, timedelta
+import time
 
 # Import utilities
 from Utilities import *
 
-
 # Import requirements for logging
-#import logging
+# import logging
 import logging.handlers
+
+from Generator import Generator
+from PowerReading import PowerReading
+from DataService import DataService
+from PowerStats import PowerStats
+
+import argparse
 
 LOG_BASEDIR = "/var/log/solar/"
 LOG_FILENAME = LOG_BASEDIR + "kaco2pv.log"
 LOG_READINGS_FILENAME = LOG_BASEDIR + "kaco2pv_readings.log"
-
-
-
 
 make_sure_path_exists(LOG_BASEDIR)
 
@@ -73,7 +45,7 @@ logging.basicConfig(level=logging.DEBUG,
                     filemode='w')
 # define a Handler which writes INFO messages or higher to the sys.stderr
 CONSOLE = logging.StreamHandler()
-CONSOLE.setLevel(logging.DEBUG) #was info
+CONSOLE.setLevel(logging.DEBUG)  # was info
 # set a format which is simpler for console use
 FORMATTER = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
 # tell the handler to use this format
@@ -98,7 +70,6 @@ LOGGER4 = logging.getLogger('kaco2pv.posting')
 # logging info for inverter
 LOGGER5 = logging.getLogger('kaco2pv.inverter')
 
-
 # Now logging specifically of the data received from the inverter
 
 LOGGER6 = logging.getLogger('kaco2pv.raw')
@@ -120,9 +91,17 @@ LOGGER6.addHandler(PVDATA)
 # LOGGER2.warning('Jail zesty vixen who grabbed pay from quack.')
 # LOGGER2.error('The five boxing wizards jump quickly.')
 
+# -f file -d directory -k key foreground daemon
+
 LOGGER1.info("pvs2pvo - (c) Ian Hutt 2014")
 LOGGER1.info("modified by Chris Peck for Kaco Inverters")
 LOGGER1.info("Startup")
+
+# TODO
+PVS_DATA_INPUT_FILE = "../data/from_kaco/solar/kaco2pv_readings.log.2016-05-10"
+PVS_DATA_INPUT_DIR = ""
+
+DAEMON = False
 
 # May need changing
 # Device normally used on Raspberry pi
@@ -134,44 +113,176 @@ PVS_MIN_PVP = 7.5
 # PV generation values greater than this will be set to this
 PVS_MAX_PVP = 6000.0
 
+PVS_READING_FROM_FILE = False
+
 PVO_HOST = "pvoutput.org"
 PVO_STATUS_URI = "/service/r2/addstatus.jsp"
 PVO_OUTPUT_URI = "/service/r2/addoutput.jsp"
-
+PVO_STATUS_BATCH_URI = "/service/r2/addbatchstatus.jsp"
+PVO_OUTPUT_BATCH_URI = "/service/r2/addbatchoutput.jsp"
 
 PVO_KEY = "7ed8a297d387d3887dbd8059c5d8544382a4a12b"
 # Your PVoutput system ID here
 PVO_SYSTEM_ID = "24657"
 # How often in minutes to update PVoutput
-PVO_STATUS_INTERVAL = 5
+PVO_STATUS_INTERVAL = "00:05:00"
 # Time in hours of updates from Kaco unit (normally 10 seconds)
-SAMPLE_TIME = 10/3600
+PVS_SAMPLE_TIME = "00:00:10"
 
-PV_DAILY_UPLOAD_TIME_HOUR = 23
-PV_DAILY_UPLOAD_TIME_MIN = 45
+PVS_DAILY_UPLOAD_TIME = "23:45"
 
+# latest time after which it is decided that there aren't a full days readings
+PVS_SUNRISE = "09:00"
+PVS_DATA_START_TIME = "06:00:00"
 
-TIME_NOW = datetime.now()
-PV_DAILY_UPLOAD_TIME = TIME_NOW.replace(hour=PV_DAILY_UPLOAD_TIME_HOUR,
-                                        minute=PV_DAILY_UPLOAD_TIME_MIN,
-                                        second=0, microsecond=0)
+# default date for file data if not specified in filename
+datemin = datetime.min
+datenow = datetime.now()
+PVS_FILE_DATE = datemin.strftime("%Y-%m-%d")
 
-# True for local only, False turns on pvoutput upload
-LOCAL_ONLY_TESTING = False
+PVS_TIME_NOW = datenow.strftime("%Y%m%d")
 
+PVS_OUTPUT_DIRECTORY = '/var/log/solar'
 
+# create the top-level parser
+parser = argparse.ArgumentParser(description='Process data from KacoPV system and upload to pvoutput.org')
 
-from Generator import Generator
-from PowerReading import PowerReading
-from DataService import DataService
+# parser for pv service arguments - part of main, not sub parser
+parser.add_argument('--pvoutput_key', action='store',
+                    help='key for uploading to pvoutput.org')
+parser.add_argument('--pvoutput_systemid', action='store',
+                    help='systemid for uploading to pvoutput.org')
+parser.add_argument('--pvoutput_host', action='store',
+                    help='host for uploading data to',
+                    default=PVO_HOST)
+parser.add_argument('--pvstatus_uri', action='store',
+                    help='uri for uploading status data to',
+                    default=PVO_STATUS_URI)
+parser.add_argument('--pvoutput_uri', action='store',
+                    help='uri for uploading output data to',
+                    default=PVO_OUTPUT_URI)
+parser.add_argument('--pv_batch_status_uri', action='store',
+                    help='uri for batch uploading status data to',
+                    default=PVO_OUTPUT_BATCH_URI)
+parser.add_argument('--pv_batch_output_uri', action='store',
+                    help='uri for batch uploading output data to',
+                    default=PVO_STATUS_BATCH_URI)
+parser.add_argument('--pvoutput_status_interval', action='store',
+                    help='interval for updating status with service provider (HH:MM:SS)',
+                    default=PVO_STATUS_INTERVAL)
+parser.add_argument('--latest_time', action='store',
+                    help='latest time which panels should be generating by (HH:MM:SS)',
+                    default=PVS_SUNRISE)
 
-KACOGENERATOR = Generator()
+subparsers = parser.add_subparsers(help='help for subcommand', dest='subparser_name')
+
+# create the parser for the "import" command
+parser_a = subparsers.add_parser('import', help='import and upload data from existing file or directory')
+group_a = parser_a.add_mutually_exclusive_group()
+group_a.add_argument('--input_directory', nargs='?', action='store',
+                     help='directory to read existing solar data from',
+                     default='')
+group_a.add_argument('--input_file', nargs='?', action='store',
+                     help='individual file to upload solar data from',
+                     default='')
+parser_a.add_argument('--file_date', action='store',
+                      help='date of file for data upload if not specified in filename %YYYY-%MM-%DD',
+                      default=PVS_FILE_DATE)
+parser_a.add_argument('--start_time', action='store',
+                      help='start time of data to upload (HH:MM:SS)',
+                      default=PVS_DATA_START_TIME)
+
+# create the parser for the "capture" command
+parser_b = subparsers.add_parser('capture', help='capture and upload data from an external device')
+parser_b.add_argument('--output_directory', action='store',
+                      help='destination for solar logs',
+                      default=PVS_OUTPUT_DIRECTORY)
+parser_b.add_argument('--daemon', action='store_true',
+                      help='start backgroung monitoring of solar data',
+                      required=False, default=False)
+parser_b.add_argument('--device', action='store',
+                      help='device for capturing serial data from',
+                      default=PVS_DEVICE)
+parser_b.add_argument('--sample_time', action='store',
+                      help='sample time for device (HH:MM:SS)',
+                      default=PVS_SAMPLE_TIME)
+
+args = parser.parse_args()
+print(args)
+
+if args.subparser_name == 'import':
+    if args.input_directory != '':
+        PVS_DATA_INPUT_DIR = args.input_directory
+    if args.input_file != '':
+        PVS_DATA_INPUT_FILE = args.input_file
+    if args.input_file or args.input_directory:
+        PVS_READING_FROM_FILE = True
+    if args.file_date:
+        PVS_FILE_DATE = datetime.strptime(args.file_date, "%Y-%m-%d")
+    if args.start_time:
+        PVS_DATA_START_TIME = time.strptime(args.start_time, "%H:%M:%S")
+
+if args.subparser_name == 'capture':
+    if args.output_directory != '':
+        PVS_OUTPUT_DIRECTORY = args.output_directory
+    if args.daemon:
+        DAEMON = args.daemon
+    if args.device:
+        PVS_DEVICE = args.device
+    if args.sample_time:
+        t = time.strptime(args.sample_time, "%H:%M:%S")
+        PVS_SAMPLE_TIME = timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
+
+if args.pvoutput_key:
+    PVO_KEY = args.pvoutput_key
+if args.pvoutput_systemid:
+    PVO_SYSTEM_ID = args.pvoutput_systemid
+if args.pvoutput_host:
+    PVO_HOST = args.pvoutput_host
+if args.pvoutput_status_interval:
+    PVO_STATUS_INTERVAL = time.strptime(args.pvoutput_status_interval, "%H:%M:%S")
+if args.pvoutput_uri:
+    PVO_OUTPUT_URI = args.pvoutput_uri
+if args.pvstatus_uri:
+    PVO_STATUS_URI = args.pvstatus_uri
+if args.pv_batch_output_uri:
+    PVO_OUTPUT_URI = args.pvoutput_uri
+if args.pv_batch_status_uri:
+    PVO_STATUS_URI = args.pvstatus_uri
+if args.latest_time:
+    PVS_SUNRISE = time.strptime(args.latest_time, "%H:%M:%S")
+
+# Instantiate objects
+MYKACOGENERATOR = Generator()
 MYREADING = PowerReading()
-DATASERVICE = DataService()
+MYDATASERVICE = DataService()
+MYSTATS = PowerStats()
 
-DATASERVICE.set_host_url(PVO_HOST)
-DATASERVICE.set_host_uri_status(PVO_STATUS_URI)
-DATASERVICE.set_host_uri_output(PVO_OUTPUT_URI)
+# Configure data service
+MYDATASERVICE.set_client_key(PVO_KEY)
+MYDATASERVICE.set_client_system_id(PVO_SYSTEM_ID)
+MYDATASERVICE.set_host_url(PVO_HOST)
+MYDATASERVICE.set_host_uri_status(PVO_STATUS_URI)
+MYDATASERVICE.set_host_uri_output(PVO_OUTPUT_URI)
+MYDATASERVICE.set_host_status_interval(PVO_STATUS_INTERVAL)
 
+# Configure generator
+if PVS_DATA_INPUT_DIR:
+    MYKACOGENERATOR.set_path_dir(PVS_DATA_INPUT_DIR)
+if PVS_DATA_INPUT_FILE:
+    MYKACOGENERATOR.set_path_file(PVS_DATA_INPUT_FILE)
 
+MYKACOGENERATOR.set_is_reading_from_file(PVS_READING_FROM_FILE)
+MYKACOGENERATOR.set_data_start_time(PVS_DATA_START_TIME)
+MYKACOGENERATOR.set_file_date(PVS_FILE_DATE)
+MYKACOGENERATOR.import_readings()
+MYKACOGENERATOR.print_readings()
 
+MYKACOGENERATOR.print_stats()
+
+MYKACOGENERATOR.set_path_device(PVS_DEVICE)
+MYKACOGENERATOR.set_power_max(PVS_MAX_PVP)
+MYKACOGENERATOR.set_power_min(PVS_MIN_PVP)
+MYKACOGENERATOR.set_time_daily_upload(PVS_DAILY_UPLOAD_TIME)
+MYKACOGENERATOR.set_time_sunrise(PVS_SUNRISE)
+MYKACOGENERATOR.set_time_sample_period(PVS_SAMPLE_TIME)
