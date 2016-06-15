@@ -127,7 +127,11 @@ PVO_SYSTEM_ID = "24657"
 # How often in minutes to update PVoutput
 PVO_STATUS_INTERVAL = "00:05:00"
 # Time in hours of updates from Kaco unit (normally 10 seconds)
-PVS_SAMPLE_TIME = "00:00:10"
+PVS_SAMPLE_TIME_DEFAULT = "00:00:10"
+t = time.strptime(PVS_SAMPLE_TIME_DEFAULT, "%H:%M:%S")
+
+PVS_SAMPLE_TIME = timedelta(hours=t.tm_hour, minutes=t.tm_min,
+                            seconds=t.tm_sec)
 
 PVS_DAILY_UPLOAD_TIME = "23:45"
 
@@ -240,7 +244,8 @@ if args.pvoutput_systemid:
 if args.pvoutput_host:
     PVO_HOST = args.pvoutput_host
 if args.pvoutput_status_interval:
-    PVO_STATUS_INTERVAL = time.strptime(args.pvoutput_status_interval, "%H:%M:%S")
+    t = time.strptime(args.pvoutput_status_interval, "%H:%M:%S")
+    PVO_STATUS_INTERVAL = timedelta(hours=t.tm_hour, minutes=t.tm_min, seconds=t.tm_sec)
 if args.pvoutput_uri:
     PVO_OUTPUT_URI = args.pvoutput_uri
 if args.pvstatus_uri:
@@ -254,11 +259,10 @@ if args.latest_time:
 
 # Instantiate objects
 MYKACOGENERATOR = Generator()
-MYREADING = PowerReading()
 MYDATASERVICE = DataService()
-MYSTATS = PowerStats()
 
 # Configure data service
+MYDATASERVICE.set_testing(True)
 MYDATASERVICE.set_client_key(PVO_KEY)
 MYDATASERVICE.set_client_system_id(PVO_SYSTEM_ID)
 MYDATASERVICE.set_host_url(PVO_HOST)
@@ -271,18 +275,17 @@ if PVS_DATA_INPUT_DIR:
     MYKACOGENERATOR.set_path_dir(PVS_DATA_INPUT_DIR)
 if PVS_DATA_INPUT_FILE:
     MYKACOGENERATOR.set_path_file(PVS_DATA_INPUT_FILE)
-
-MYKACOGENERATOR.set_is_reading_from_file(PVS_READING_FROM_FILE)
-MYKACOGENERATOR.set_data_start_time(PVS_DATA_START_TIME)
-MYKACOGENERATOR.set_file_date(PVS_FILE_DATE)
-MYKACOGENERATOR.import_readings()
-MYKACOGENERATOR.print_readings()
-
-MYKACOGENERATOR.print_stats()
-
 MYKACOGENERATOR.set_path_device(PVS_DEVICE)
 MYKACOGENERATOR.set_power_max(PVS_MAX_PVP)
 MYKACOGENERATOR.set_power_min(PVS_MIN_PVP)
 MYKACOGENERATOR.set_time_daily_upload(PVS_DAILY_UPLOAD_TIME)
 MYKACOGENERATOR.set_time_sunrise(PVS_SUNRISE)
 MYKACOGENERATOR.set_time_sample_period(PVS_SAMPLE_TIME)
+MYKACOGENERATOR.set_is_reading_from_file(PVS_READING_FROM_FILE)
+MYKACOGENERATOR.set_data_start_time(PVS_DATA_START_TIME)
+MYKACOGENERATOR.set_file_date(PVS_FILE_DATE)
+MYKACOGENERATOR.import_readings()
+MYKACOGENERATOR.print_readings()
+MYKACOGENERATOR.print_stats()
+
+MYDATASERVICE.do_batch_status_upload(MYKACOGENERATOR.get_stats())

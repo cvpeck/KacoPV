@@ -44,8 +44,10 @@
     # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     #
     """
+from datetime import datetime, timedelta
 import os
 import errno
+
 
 def make_sure_path_exists(path):
     """ Checks whether a path exists and createst directory if not """
@@ -55,6 +57,7 @@ def make_sure_path_exists(path):
         if exception.errno != errno.EEXIST:
             raise
 
+
 def num(string_to_convert):
     """ returns an int or float from string """
     try:
@@ -62,3 +65,8 @@ def num(string_to_convert):
     except ValueError:
         return float(string_to_convert)
 
+
+def convert_timedelta_to_hours(duration):
+    seconds = duration.total_seconds()
+    hours = seconds / 3600
+    return hours

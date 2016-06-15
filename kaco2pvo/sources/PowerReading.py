@@ -68,6 +68,10 @@ class PowerReading:
         """ set placeholder """
         self._reading['placeholder'] = placeholder
 
+    def get_placeholder(self):
+        """ get placeholder """
+        return self._reading['placeholder']
+
     def set_run_time_daily(self, run_time_daily):
         """ set run time daily """
         self._reading['run_time_daily'] = run_time_daily
@@ -94,7 +98,7 @@ class PowerReading:
 
     def set_line_current_feed_in(self, line_current_feed_in):
         """ set line current feed in """
-        self._reading['line_currrent_feed_in'] = line_current_feed_in
+        self._reading['line_current_feed_in'] = line_current_feed_in
 
     def set_line_power_feed_in(self, line_power_feed_in):
         """ set line power feed in """
