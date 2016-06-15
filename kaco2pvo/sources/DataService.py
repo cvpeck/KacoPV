@@ -21,13 +21,14 @@ import sys
 import urllib, urllib.parse
 import http.client
 from enum import Enum
+import math
 
 
 class Mode(Enum):
     output = 1
     status = 2
-    batchoutput = 3
-    batchstatus = 4
+    output_batch = 3
+    status_batch = 4
 
 
 class DataService:
@@ -35,6 +36,7 @@ class DataService:
 
     _data_service = {}
     _mode = Mode.output
+    _params_list = []
 
     def clear_data_service(self):
         """ clears this data service data """
@@ -50,21 +52,48 @@ class DataService:
         self._data_service['time_last_upload'] = datetime.min
         self._data_service['mode'] = Mode.output
         self._data_service['testing'] = True
-        self._data_service['max_batch_status_samples'] = 0
-        self._data_service['max_batch_data_samples'] = 0
+        self._data_service['max_batch_status_size'] = 0
+        self._data_service['max_batch_output_size'] = 0
+        self._data_service['max_batch_status_age'] = 0
+        self._data_service['max_batch_output_age'] = 0
 
     def create_data_service(self):
         """ creates reding dictionary """
         self._data_service = {}
         return self._data_service
 
-    def set_max_batch_status_samples(self, max):
+    def set_max_batch_status_size(self, max):
         """ Sets the maximum number of status samples that can be uploaded in batch mode """
-        self._data_service['max_batch_status_samples'] = max
+        self._data_service['max_batch_status_size'] = max
 
-    def set_max_batch_data_samples(self, max):
-        """ Sets the maximum number of data samples that can be uploaded in batch mode """
-        self._data_service['max_batch_data_samples'] = max
+    def set_max_batch_output_size(self, max):
+        """ Sets the maximum number of output samples that can be uploaded in batch mode """
+        self._data_service['max_batch_output_size'] = max
+
+    def set_max_batch_status_age(self, max):
+        """ Sets the maximum age of status samples that can be uploaded in batch mode """
+        self._data_service['max_batch_status_age'] = max
+
+    def set_max_batch_output_age(self, max):
+        """ Sets the maximum age of output samples that can be uploaded in batch mode """
+        self._data_service['max_batch_output_age'] = max
+
+    def get_max_batch_status_size(self):
+        """ Gets the maximum number of status samples that can be uploaded in batch mode """
+        return self._data_service['max_batch_status_size']
+
+    def get_max_batch_output_size(self):
+        """ Gets the maximum number of output samples that can be uploaded in batch mode """
+        return self._data_service['max_batch_output_size']
+
+    def get_max_batch_status_age(self):
+        """ Gets the maximum age of status samples that can be uploaded in batch mode """
+        return self._data_service['max_batch_status_age']
+
+    def get_max_batch_output_age(self):
+        """ Gets the maximum age of output samples that can be uploaded in batch mode """
+        return self._data_service['max_batch_output_age']
+
 
     def set_testing(self, testing):
         """ Turns off uploading """
@@ -157,25 +186,27 @@ class DataService:
         """ This is the upload which occurs regularly as the data is being read"""
         # stats = generator.get_stats()
         # readings = generator.get_readings()
-
-        # print("there are count_readings - ",len(readings))
+        self.set_mode(Mode.status_batch)
         print("there are count_stats - ", len(stats))
-
         for i in range(len(stats)):
             mystat = stats[i]
-
-            params = {
-                'd': mystat.get_time_of_stat(),  # TODO Convert to correct date format yyyymmdd
-                't': mystat.get_time_of_stat(),  # TODO Convert to correct time format hh:mm
-                'v1': mystat.get_average_energy_generated_this_sample_period(),
-                'v2': mystat.get_average_power_generated_this_sample_period(),
-                'v3': 0,  # Energy used not currently implemented by KACO
-                'v4': 0,  # Power used not currently implemented by KACO,
-                'v5': mystat.get_average_temperature_this_sample_period(),
-                'v6': mystat.get_average_voltage_this_sample_period(),
-                'c1': 0,
-                'n': 0}
-            print("batch status uploaded params would be - ", params)
+            if mystat.get_time_of_stat() + self.get_max_batch_status_age() > datetime.now():
+                params = {
+                    'd': mystat.get_time_of_stat().strftime('%Y%m%d'),
+                    't': mystat.get_time_of_stat().strftime('%H:%M'),
+                    'v1': int(mystat.get_average_energy_generated_this_sample_period()),
+                    'v2': int(mystat.get_average_power_generated_this_sample_period()),
+                    'v3': int(0),  # Energy used not currently implemented by KACO
+                    'v4': int(0),  # Power used not currently implemented by KACO,
+                    'v5': mystat.get_average_temperature_this_sample_period(),
+                    'v6': mystat.get_average_voltage_this_sample_period(),
+                    'c1': 0,
+                    'n': 0}
+                print("batch status uploaded params would be ", params)
+                self._params_list.append(params)
+            else:
+                print("skipping too old data from ", mystat.get_time_of_stat())
+        self.post()
 
     def do_batch_data_upload(self):
         """ Do the upload """
@@ -183,19 +214,20 @@ class DataService:
 
     def do_status_upload(self, stats):
         """ Do the status upload """
-        """ This is the uload which occurs regularly as the data is being read"""
+        """ This is the upload which occurs regularly as the data is being read"""
         """ TODO """
+
         params = {'d': stats['reading_time'].strftime('%Y%m%d'),
                   't': stats['reading_time'].strftime('%H:%M'),
-                  'v1': stats['energy_generated_this_sample_period'],
-                  'v2': stats['power_generated_this_sample_period'],
-                  'v3': stats['energy_used_this_sample-period'],
-                  'v4': stats['power_used_this_sample_period'],
+                  'v1': int(stats['energy_generated_this_sample_period']),
+                  'v2': int(stats['power_generated_this_sample_period']),
+                  'v3': int(stats['energy_used_this_sample-period']),
+                  'v4': int(stats['power_used_this_sample_period']),
                   'v5': stats['temperature_average_this_sample_period'],
                   'v6': stats['voltage_average_this_sample_period'],
                   'c1': 0,
                   'n': 0}
-        print("status uploaded params would be - ", params)
+        print("status uploaded params would be - d=%s t=%s ", params['d'])
 
     # def do_data_upload(self):
     #     """ Do the upload """
@@ -215,18 +247,22 @@ class DataService:
     #           'cm': 'EOD upload.'
     #                 + pvoComment}
 
-    def post(self, _params):
+    def post(self):
         """ Performs posting to pvoutput.org """
         if not self._data_service['testing']:
             try:
                 if self.get_mode() == Mode['output']:
                     uri = self.get_host_uri_output()
+                    post_size = 1
                 elif self.get_mode() == Mode['output_batch']:
                     uri = self.get_host_batch_uri_output()
+                    post_size = self.get_max_batch_output_size()
                 elif self.get_mode() == Mode['status']:
                     uri = self.get_host_uri_status()
+                    post_size = 1
                 elif self.get_mode() == Mode['status_batch']:
                     uri = self.get_host_batch_uri_status()
+                    post_size = self.get_max_batch_status_size()
                 else:
                     raise Exception("Invalid operating mode attempted").with_traceback()
 
@@ -235,15 +271,30 @@ class DataService:
                            'X-Pvoutput-SystemId': self._data_service['client_system_id'],
                            "Accept": "text/plain",
                            "Content-type": "application/x-www-form-urlencoded"}
-                conn = http.client.HTTPConnection(self.get_host_url())
-                #               conn.set_debuglevel(2) # debug purposes only
-                conn.request("POST", uri, urllib.parse.urlencode(_params), headers)
-                response = conn.getresponse()
-                # LOGGER4.debug("Status" + str(response.status) + "   Reason:" +
-                #             str(response.reason) + "-" + str(response.read()))
-                sys.stdout.flush()
-                conn.close()
-                return response.status == 200
+                # use an iterator for god's sake
+                for messages in range(0, len(self._params_list) - 1, post_size):
+                    data = "data="
+                    for request in range(0, post_size - 1):
+                        params = self._params_list[request]
+                        data += params['d'] + "," \
+                                + params['t'] + "," \
+                                + params['v1'] + "," \
+                                + params['v2'] + "," \
+                                + params['v3'] + "," \
+                                + params['v4'] + "," \
+                                + params['v5'] + "," \
+                                + params['v6'] + ";"
+
+                    conn = http.client.HTTPConnection(self.get_host_url())
+                    #               conn.set_debuglevel(2) # debug purposes only
+                    conn.request("POST", uri, urllib.parse.urlencode(data), headers)
+                    response = conn.getresponse()
+                    # LOGGER4.debug("Status" + str(response.status) + "   Reason:" +
+                    #             str(response.reason) + "-" + str(response.read()))
+                    sys.stdout.flush()
+                    conn.close()
+                    return response.status == 200
+
             except Exception as e:
                 # LOGGER4.error("Exception posting results\n" + str(e))
                 sys.stdout.flush()

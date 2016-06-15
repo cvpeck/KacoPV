@@ -21,10 +21,6 @@ import re
 from PowerReading import PowerReading
 from PowerStats import PowerStats
 from Utilities import num
-
-from datetime import datetime
-
-
 import csv
 
 
@@ -37,7 +33,6 @@ class Generator:
     _reading_count = 0
     _sample_reading_count = 0
     _time_of_first_sample_in_set = datetime.strptime("06:00:00", "%H:%M:%S")
-
 
     def get_is_ready_to_read(self):
         """ returns whether the generator is ready to read """
@@ -124,10 +119,6 @@ class Generator:
         """ returns daily readings """
         return self._generator['readings_daily']
 
-    def get_readings(self):
-        """ returns readings """
-        return self._myreadings
-
     def is_comment(self, line):
         return line.startswith('#')
 
@@ -152,8 +143,8 @@ class Generator:
                     else:
                         print("no date found in filename")
 
-                data_reader = csv.reader((line for line in fin if not
-                line.startswith('#') and not line.isspace()), delimiter=' ')
+                data_reader = csv.reader((line for line in fin if not line.startswith('#') and not line.isspace()),
+                                         delimiter=' ')
                 for row in data_reader:
                     i = 0
                     for x in row:
@@ -165,38 +156,32 @@ class Generator:
                     onestat = PowerStats()
                     # if date is not min (i.e it has been explicitly set or read from filename
                     if self.get_file_date() != datetime.min:
-                        # # set placeholder value in reading to timedate plus sample time * no of reading
-                        # tsp = self.get_time_sample_period()
-                        # dst = self.get_data_start_time()
-                        # fd = self.get_file_date() + timedelta(hours=dst.tm_hour, minutes=dst.tm_min, seconds=dst.tm_sec)
-                        # nr = self.get_number_of_readings()
-                        # incp = nr * tsp
-                        # cr = fd + incp
-                        # timeofreading = cr.strftime("%H.%M.%S")
 
-                        # sample time has no meaning for files read in
                         # set placeholder value in reading to timedate plus run time
                         rtd = datetime.strptime(my_list[1], "%H:%M:%S")
                         # rtd read from file is of the form 01:36:10
                         dst = self.get_data_start_time()
-                        fd = self.get_file_date() + timedelta(hours=dst.tm_hour, minutes=dst.tm_min, seconds=dst.tm_sec)
-                        cr = fd + timedelta(hours=rtd.hour, minutes=rtd.minute, seconds=rtd.second)
-                        timeofreading = cr.strftime("%H.%M.%S")
+                        fd = self.get_file_date() + timedelta(hours=dst.hour, minutes=dst.minute, seconds=dst.second)
+                        timeofreading = fd + timedelta(hours=rtd.hour, minutes=rtd.minute, seconds=rtd.second)
 
                     else:
                         # otherwise use value already in file
-                        timeofreading = my_list[0]
+                        timeofreading = my_list[0].strftime("%H.%M.%S")
 
-                    t = datetime.strptime(timeofreading, "%H.%M.%S")
-                    tofsis = self._time_of_first_sample_in_set
                     # Since we're reading from file, time sample period is current time - last reading time (1st in set)
-                    tsp = t - tofsis
+                    time_sample_period = timeofreading - self._time_of_first_sample_in_set
 
-                    onestat.set_time_sample_period(tsp)
-                    self._running_stat.set_time_sample_period(tsp)
-                    self._time_of_first_sample_in_set = t
+                    onestat.set_time_sample_period(time_sample_period)
+                    self._running_stat.set_time_sample_period(time_sample_period)
 
-                    my_reading.set_placeholder(timeofreading)
+                    _add_to_stack = False
+                    # so we can only upload data in bulk with minute resolution
+                    if timeofreading.minute != self._time_of_first_sample_in_set.minute:
+                        self._time_of_first_sample_in_set = timeofreading
+                        self._sample_reading_count = 0
+                        _add_to_stack = True
+
+                    my_reading.set_placeholder(timeofreading.strftime("%H.%M.%S"))
                     my_reading.set_run_time_daily(
                         datetime.strptime(my_list[1], "%H:%M:%S"))
                     my_reading.set_operating_state(my_list[2])
@@ -212,18 +197,19 @@ class Generator:
                     self._myreadings.append(my_reading)
                     self._running_stat.set_total_reading_count(self._reading_count)
                     self._running_stat.set_sample_reading_count(self._sample_reading_count)
-                    self._running_stat.caclulate_stats(my_reading)
-                    onestat.set_total_voltage(self._running_stat.get_total_voltage())
-                    onestat.set_total_current(self._running_stat.get_total_current())
-                    onestat.set_total_power(self._running_stat.get_total_power())
-                    onestat.set_total_energy(self._running_stat.get_total_energy())
-                    onestat.set_total_temperature(self._running_stat.get_total_temperature())
-                    onestat.set_total_reading_count(self._reading_count)
-                    onestat.set_sample_reading_count(self._sample_reading_count)
-                    onestat.caclulate_stats(my_reading)
-                    self._mystats.append(onestat)
-                    self._sample_reading_count = 0
+                    self._running_stat.caclulate_stats(my_reading, self.get_file_date())
 
+                    if _add_to_stack:
+                        onestat.set_total_voltage(self._running_stat.get_total_voltage())
+                        onestat.set_total_current(self._running_stat.get_total_current())
+                        onestat.set_total_power(self._running_stat.get_total_power())
+                        onestat.set_total_energy(self._running_stat.get_total_energy())
+                        onestat.set_total_temperature(self._running_stat.get_total_temperature())
+                        onestat.set_total_reading_count(self._reading_count)
+                        onestat.set_sample_reading_count(self._sample_reading_count)
+                        onestat.caclulate_stats(my_reading, self.get_file_date())
+                        self._mystats.append(onestat)
+                        _add_to_stack = False
 
             finally:
                 if 'fin' in locals():
@@ -252,7 +238,7 @@ class Generator:
         self._generator['reading_is_full_day'] = False
         self._generator['time_reading'] = datetime.min
         self._generator['time_sunrise'] = datetime.min
-        self._generator['data_start_time'] = datetime.strptime("06:00:00", "%H:%M:%S")
+        self._generator['data_start_time'] = datetime.min
         self._generator['file_date'] = datetime.min
         self._reading_count = 0
         self._sample_reading_count = 0
@@ -260,22 +246,17 @@ class Generator:
         del self._mystats[:]
         self._running_stat.clear_stats()
 
-    def count_items(self, list):
-        """ :returns int """
-        """ returns number of items """
-        return len(list)
-
     def print_stats(self):
         """ prints stats for generator to console"""
-        print(" There are %i stats", self.count_items(self._mystats))
-        for i in range(self.count_items(self._mystats)):
+        print(" There are %i stats", len(self._mystats))
+        for i in range(len(self._mystats)):
             mystat = self._mystats[i]
             mystat.print_stats()
 
     def print_readings(self):
         """ prints readings for generator to console """
-        print(" There are %i readings", self.count_items(self._myreadings))
-        for i in range(self.count_items(self._myreadings)):
+        print(" There are %i readings", len(self._myreadings))
+        for i in range(len(self._myreadings)):
             myreading = self._myreadings[i]
             myreading.print_reading()
 

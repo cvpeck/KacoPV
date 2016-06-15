@@ -30,16 +30,23 @@ class PowerStats:
         """ returns stats """
         return self._stats
 
-    def caclulate_stats(self, power_reading):
+    def caclulate_stats(self, power_reading, start_date):
         """ forces recalculation of stats """
         # Energy calculations
         # Generated
         time_sample_period = self.get_time_sample_period()
         time_sample_hours = convert_timedelta_to_hours(time_sample_period)
 
-        timeofreading = power_reading.get_placeholder()
+        string_time_of_reading = power_reading.get_placeholder()
+        time_of_reading = datetime.strptime(string_time_of_reading, "%H.%M.%S")
+        date_time_of_reading = datetime(year=start_date.year,
+                                        month=start_date.month,
+                                        day=start_date.day,
+                                        hour=time_of_reading.hour,
+                                        minute=time_of_reading.minute,
+                                        second=time_of_reading.second)
 
-        self._stats['time_of_stat'] = datetime.strptime(timeofreading, "%H.%M.%S")
+        self._stats['time_of_stat'] = date_time_of_reading
 
         self._stats['energy_generated_this_sample_period'] += \
             power_reading.get_generator_power() * time_sample_hours
@@ -63,7 +70,7 @@ class PowerStats:
         # Generated
         if self._stats['power_generated_peak'] < power_reading.get_generator_power():
             self._stats['power_generated_peak'] = power_reading.get_generator_power()
-            self._stats['time_peak'] = datetime.strptime(timeofreading, "%H.%M.%S")
+            self._stats['time_peak'] = time_of_reading
 
         self._stats['power_generated_this_sample_period'] += power_reading.get_generator_power()
         self._stats['power_generated_total'] += power_reading.get_generator_power()

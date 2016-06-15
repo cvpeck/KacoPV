@@ -126,12 +126,20 @@ PVO_KEY = "7ed8a297d387d3887dbd8059c5d8544382a4a12b"
 PVO_SYSTEM_ID = "24657"
 # How often in minutes to update PVoutput
 PVO_STATUS_INTERVAL = "00:05:00"
+# Maximum number of batch statuses that can be uploaded in one go
+PVO_MAX_BATCH_STATUS_SIZE = 30
+# Maximum number of batch outputs that can be uploaded in one go
+PVO_MAX_BATCH_OUTPUT_SIZE = 30
+# Maximum age (days) of batch statuses that can be uploaded
+PVO_MAX_BATCH_STATUS_AGE = 14
+# Maximum age (days) of batch outputs that can be uploaded in one go
+PVO_MAX_BATCH_OUTPUT_AGE = 14
 # Time in hours of updates from Kaco unit (normally 10 seconds)
 PVS_SAMPLE_TIME_DEFAULT = "00:00:10"
-t = time.strptime(PVS_SAMPLE_TIME_DEFAULT, "%H:%M:%S")
+t = datetime.strptime(PVS_SAMPLE_TIME_DEFAULT, "%H:%M:%S")
 
-PVS_SAMPLE_TIME = timedelta(hours=t.tm_hour, minutes=t.tm_min,
-                            seconds=t.tm_sec)
+PVS_SAMPLE_TIME = timedelta(hours=t.hour, minutes=t.minute,
+                            seconds=t.second)
 
 PVS_DAILY_UPLOAD_TIME = "23:45"
 
@@ -177,6 +185,18 @@ parser.add_argument('--pvoutput_status_interval', action='store',
 parser.add_argument('--latest_time', action='store',
                     help='latest time which panels should be generating by (HH:MM:SS)',
                     default=PVS_SUNRISE)
+parser.add_argument('--pv_max_batch_status_size', action='store',
+                    help='maximum number of batch statuses that can be uploaded in one go',
+                    default=PVO_MAX_BATCH_STATUS_SIZE)
+parser.add_argument('--pv_max_batch_output_size', action='store',
+                    help='maximum number of batch outputs that can be uploaded in one go',
+                    default=PVO_MAX_BATCH_OUTPUT_SIZE)
+parser.add_argument('--pv_max_batch_status_age', action='store',
+                    help='maximum age (days) of batch statuses that can be uploaded',
+                    default=PVO_MAX_BATCH_STATUS_AGE)
+parser.add_argument('--pv_max_batch_output_age', action='store',
+                    help='maximum age (days) of batch outputs that can be uploaded',
+                    default=PVO_MAX_BATCH_OUTPUT_AGE)
 
 subparsers = parser.add_subparsers(help='help for subcommand', dest='subparser_name')
 
@@ -224,7 +244,8 @@ if args.subparser_name == 'import':
     if args.file_date:
         PVS_FILE_DATE = datetime.strptime(args.file_date, "%Y-%m-%d")
     if args.start_time:
-        PVS_DATA_START_TIME = time.strptime(args.start_time, "%H:%M:%S")
+        PVS_DATA_START_TIME = datetime.strptime(args.start_time, "%H:%M:%S")
+
 
 if args.subparser_name == 'capture':
     if args.output_directory != '':
@@ -256,6 +277,14 @@ if args.pv_batch_status_uri:
     PVO_STATUS_URI = args.pvstatus_uri
 if args.latest_time:
     PVS_SUNRISE = time.strptime(args.latest_time, "%H:%M:%S")
+if args.pv_max_batch_output_age:
+    PVO_MAX_BATCH_OUTPUT_AGE = args.pv_max_batch_output_age
+if args.pv_max_batch_status_age:
+    PVO_MAX_BATCH_STATUS_AGE = args.pv_max_batch_status_age
+if args.pv_max_batch_output_size:
+    PVO_MAX_BATCH_OUTPUT_SIZE = args.pv_max_batch_output_size
+if args.pv_max_batch_status_size:
+    PVO_MAX_BATCH_STATUS_SIZE = args.pv_max_batch_status_size
 
 # Instantiate objects
 MYKACOGENERATOR = Generator()
@@ -269,6 +298,10 @@ MYDATASERVICE.set_host_url(PVO_HOST)
 MYDATASERVICE.set_host_uri_status(PVO_STATUS_URI)
 MYDATASERVICE.set_host_uri_output(PVO_OUTPUT_URI)
 MYDATASERVICE.set_host_status_interval(PVO_STATUS_INTERVAL)
+MYDATASERVICE.set_max_batch_status_size(PVO_MAX_BATCH_STATUS_SIZE)
+MYDATASERVICE.set_max_batch_output_size(PVO_MAX_BATCH_OUTPUT_SIZE)
+MYDATASERVICE.set_max_batch_status_age(timedelta(days=PVO_MAX_BATCH_STATUS_AGE))
+MYDATASERVICE.set_max_batch_output_age(timedelta(days=PVO_MAX_BATCH_OUTPUT_AGE))
 
 # Configure generator
 if PVS_DATA_INPUT_DIR:
