@@ -180,12 +180,8 @@ class DataService:
         return self._data_service['is_ready_to_upload']
 
     def do_batch_status_upload(self, stats):
-        """ Do the upload """
-        """ TODO """
-        """ Do the batchstatus upload """
+        """ Constructs batch of status data to upload  """
         """ This is the upload which occurs regularly as the data is being read"""
-        # stats = generator.get_stats()
-        # readings = generator.get_readings()
         self.set_mode(Mode.status_batch)
         print("there are count_stats - ", len(stats))
         for i in range(len(stats)):
@@ -208,9 +204,36 @@ class DataService:
                 print("skipping too old data from ", mystat.get_time_of_stat())
         self.post()
 
-    def do_batch_data_upload(self):
-        """ Do the upload """
-        """ TODO """
+    def do_batch_output_upload(self, output):
+        """ Constructs batch of output data to upload  """
+        """ This is the upload which occurs on a daily basis """
+        # TODO - all of the below is just a copy of the batch status output at present
+        self.set_mode(Mode.output_batch)
+        print("there are count_output - ", len(output))
+        for i in range(len(output)):
+            myoutput = output[i]
+            if myoutput.get_time_of_stat() + self.get_max_batch_output_age() < datetime.now():  # TODO changed > to < for testing
+                params = {
+                    'd': myoutput.get_time_of_stat().strftime('%Y%m%d'),
+                    'g': myoutput.get_total_power(),
+                    'e': int(0),  # exported not currently implemented # TODO
+                    'pp': myoutput.get_max_power(),
+                    'pt': myoutput.get_max_time(),
+                    'cd': "Not Sure",  # TODO - look up weather
+                    'tm': myoutput.get_min_temp(),
+                    'tx': myoutput.get_max_temp(),
+                    'cm': "",  # TODO comment field add EOD for end of day reading
+                    'ip': int(0),  # TODO import peak
+                    'io': int(0),  # TODO import off peak
+                    'is': int(0),  # TODO import shoulder
+                    'ih': int(0),  # TODO import high shoulder
+                    'c': int(0)  # TODO consumption
+                }
+                print("batch output uploaded params would be ", params)
+                self._params_list.append(params)
+            else:
+                print("skipping too old data from ", myoutput.get_time_of_stat())
+        self.post()
 
     def do_status_upload(self, stats):
         """ Do the status upload """
@@ -249,42 +272,61 @@ class DataService:
 
     def post(self):
         """ Performs posting to pvoutput.org """
-        if not self._data_service['testing']:
-            try:
-                if self.get_mode() == Mode['output']:
-                    uri = self.get_host_uri_output()
-                    post_size = 1
-                elif self.get_mode() == Mode['output_batch']:
-                    uri = self.get_host_batch_uri_output()
-                    post_size = self.get_max_batch_output_size()
-                elif self.get_mode() == Mode['status']:
-                    uri = self.get_host_uri_status()
-                    post_size = 1
-                elif self.get_mode() == Mode['status_batch']:
-                    uri = self.get_host_batch_uri_status()
-                    post_size = self.get_max_batch_status_size()
+        if self.get_mode() == Mode['output']:
+            uri = self.get_host_uri_output()
+            post_size = 1
+        elif self.get_mode() == Mode['output_batch']:
+            uri = self.get_host_batch_uri_output()
+            post_size = self.get_max_batch_output_size()
+        elif self.get_mode() == Mode['status']:
+            uri = self.get_host_uri_status()
+            post_size = 1
+        elif self.get_mode() == Mode['status_batch']:
+            uri = self.get_host_batch_uri_status()
+            post_size = self.get_max_batch_status_size()
+        else:
+            raise Exception("Invalid operating mode attempted").with_traceback()
+
+                # LOGGER4.debug("Posting results - " + str(params))
+        headers = {'X-Pvoutput-Apikey': self._data_service['client_key'],
+                   'X-Pvoutput-SystemId': self._data_service['client_system_id'],
+                   "Accept": "text/plain",
+                   "Content-type": "application/x-www-form-urlencoded"}
+
+        count = post_size
+        while True:
+            data = "data="
+            params_slice = self._params_list[count - post_size:count]
+            for params in params_slice:
+                if self.get_mode() == (Mode['status'] or Mode['status_batch']):
+                    data += str(params['d']) + "," \
+                            + str(params['t']) + "," \
+                            + str(params['v1']) + "," \
+                            + str(params['v2']) + "," \
+                            + str(params['v3']) + "," \
+                            + str(params['v4']) + "," \
+                            + str(params['v5']) + "," \
+                            + str(params['v6']) + ";"
+                elif self.get_mode() == (Mode['output'] or Mode['output_batch']):
+                    data += str(params['d']) + "," \
+                            + str(params['g']) + "," \
+                            + str(params['e']) + "," \
+                            + str(params['pp']) + "," \
+                            + str(params['pt']) + "," \
+                            + str(params['cd']) + "," \
+                            + str(params['tm']) + "," \
+                            + str(params['tx']) + "," \
+                            + str(params['cm']) + "," \
+                            + str(params['ip']) + "," \
+                            + str(params['io']) + "," \
+                            + str(params['is']) + "," \
+                            + str(params['ih']) + "," \
+                            + str(params['c']) + ";"
                 else:
                     raise Exception("Invalid operating mode attempted").with_traceback()
 
-                # LOGGER4.debug("Posting results - " + str(params))
-                headers = {'X-Pvoutput-Apikey': self._data_service['client_key'],
-                           'X-Pvoutput-SystemId': self._data_service['client_system_id'],
-                           "Accept": "text/plain",
-                           "Content-type": "application/x-www-form-urlencoded"}
-                # use an iterator for god's sake
-                for messages in range(0, len(self._params_list) - 1, post_size):
-                    data = "data="
-                    for request in range(0, post_size - 1):
-                        params = self._params_list[request]
-                        data += params['d'] + "," \
-                                + params['t'] + "," \
-                                + params['v1'] + "," \
-                                + params['v2'] + "," \
-                                + params['v3'] + "," \
-                                + params['v4'] + "," \
-                                + params['v5'] + "," \
-                                + params['v6'] + ";"
-
+            if not self._data_service['testing']:
+                try:
                     conn = http.client.HTTPConnection(self.get_host_url())
                     #               conn.set_debuglevel(2) # debug purposes only
                     conn.request("POST", uri, urllib.parse.urlencode(data), headers)
@@ -295,13 +337,16 @@ class DataService:
                     conn.close()
                     return response.status == 200
 
-            except Exception as e:
-                # LOGGER4.error("Exception posting results\n" + str(e))
-                sys.stdout.flush()
-                return False
-        else:
-            # LOGGER4.debug("In testing mode - NOT posting results")
-            return True
+                except Exception as e:
+                    # LOGGER4.error("Exception posting results\n" + str(e))
+                    sys.stdout.flush()
+                    return False
+            else:
+                # LOGGER4.debug("In testing mode - NOT posting results")
+                print("data posted would have been ", data)
+            count += post_size
+            if len(params_slice) < post_size:
+                break;
 
     def __init__(self):
         """ class initialiser """

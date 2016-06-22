@@ -163,9 +163,25 @@ class PowerStats:
         """ gets total temperature"""
         return self._stats['temperature_total']
 
+    def get_max_power(self):
+        """ get the maximum power """
+        return self._stats['power_generated_peak']
+
+    def get_max_time(self):
+        """ returns the time of maximum power output """
+        return self._stats['time_peak']
+
     def get_time_of_stat(self):
         """ gets time of stat"""
         return self._stats['time_of_stat']
+
+    def get_min_temp(self):
+        """ returns the minimum temperature """
+        return self._stats['temperature_min']
+
+    def get_max_temp(self):
+        """ returns the maximum temperature """
+        return self._stats['temperature_max']
 
     def get_average_energy_generated_this_sample_period(self):
         """ gets average energy generated this sample period"""

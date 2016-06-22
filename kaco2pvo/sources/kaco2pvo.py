@@ -97,9 +97,7 @@ LOGGER1.info("pvs2pvo - (c) Ian Hutt 2014")
 LOGGER1.info("modified by Chris Peck for Kaco Inverters")
 LOGGER1.info("Startup")
 
-# TODO
-PVS_DATA_INPUT_FILE = "../data/from_kaco/solar/kaco2pv_readings.log.2016-05-10"
-PVS_DATA_INPUT_DIR = ""
+PVS_DATA_INPUT_PATH = ""
 
 DAEMON = False
 
@@ -203,11 +201,9 @@ subparsers = parser.add_subparsers(help='help for subcommand', dest='subparser_n
 # create the parser for the "import" command
 parser_a = subparsers.add_parser('import', help='import and upload data from existing file or directory')
 group_a = parser_a.add_mutually_exclusive_group()
-group_a.add_argument('--input_directory', nargs='?', action='store',
-                     help='directory to read existing solar data from',
-                     default='')
-group_a.add_argument('--input_file', nargs='?', action='store',
-                     help='individual file to upload solar data from',
+
+group_a.add_argument('--input_path', nargs='?', action='store',
+                     help='file or directory to upload solar data from',
                      default='')
 parser_a.add_argument('--file_date', action='store',
                       help='date of file for data upload if not specified in filename %YYYY-%MM-%DD',
@@ -235,12 +231,8 @@ args = parser.parse_args()
 print(args)
 
 if args.subparser_name == 'import':
-    if args.input_directory != '':
-        PVS_DATA_INPUT_DIR = args.input_directory
-    if args.input_file != '':
-        PVS_DATA_INPUT_FILE = args.input_file
-    if args.input_file or args.input_directory:
-        PVS_READING_FROM_FILE = True
+    if args.input_path != '':
+        PVS_DATA_INPUT_PATH = args.input_path
     if args.file_date:
         PVS_FILE_DATE = datetime.strptime(args.file_date, "%Y-%m-%d")
     if args.start_time:
@@ -304,17 +296,13 @@ MYDATASERVICE.set_max_batch_status_age(timedelta(days=PVO_MAX_BATCH_STATUS_AGE))
 MYDATASERVICE.set_max_batch_output_age(timedelta(days=PVO_MAX_BATCH_OUTPUT_AGE))
 
 # Configure generator
-if PVS_DATA_INPUT_DIR:
-    MYKACOGENERATOR.set_path_dir(PVS_DATA_INPUT_DIR)
-if PVS_DATA_INPUT_FILE:
-    MYKACOGENERATOR.set_path_file(PVS_DATA_INPUT_FILE)
-MYKACOGENERATOR.set_path_device(PVS_DEVICE)
+MYKACOGENERATOR.set_path_to_data(PVS_DATA_INPUT_PATH)
+MYKACOGENERATOR.set_path_to_device(PVS_DEVICE)
 MYKACOGENERATOR.set_power_max(PVS_MAX_PVP)
 MYKACOGENERATOR.set_power_min(PVS_MIN_PVP)
 MYKACOGENERATOR.set_time_daily_upload(PVS_DAILY_UPLOAD_TIME)
 MYKACOGENERATOR.set_time_sunrise(PVS_SUNRISE)
 MYKACOGENERATOR.set_time_sample_period(PVS_SAMPLE_TIME)
-MYKACOGENERATOR.set_is_reading_from_file(PVS_READING_FROM_FILE)
 MYKACOGENERATOR.set_data_start_time(PVS_DATA_START_TIME)
 MYKACOGENERATOR.set_file_date(PVS_FILE_DATE)
 MYKACOGENERATOR.import_readings()
@@ -322,3 +310,4 @@ MYKACOGENERATOR.print_readings()
 MYKACOGENERATOR.print_stats()
 
 MYDATASERVICE.do_batch_status_upload(MYKACOGENERATOR.get_stats())
+MYDATASERVICE.do_batch_output_upload(MYKACOGENERATOR.get_output())
